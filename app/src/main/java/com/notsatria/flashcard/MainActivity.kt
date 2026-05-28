@@ -1,11 +1,11 @@
-package com.notsatria.starter
+package com.notsatria.flashcard
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.notsatria.starter.navigation.AppNavigation
-import com.notsatria.starter.ui.theme.StarterTheme
+import com.notsatria.flashcard.navigation.AppNavigation
+import com.notsatria.flashcard.ui.theme.StarterTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

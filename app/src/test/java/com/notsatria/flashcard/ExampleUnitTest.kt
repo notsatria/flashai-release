@@ -1,4 +1,4 @@
-package com.notsatria.starter
+package com.notsatria.flashcard
 
 import org.junit.Test
 

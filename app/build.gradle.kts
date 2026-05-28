@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.notsatria.starter"
+    namespace = "com.notsatria.flashcard"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.notsatria.starter"
+        applicationId = "com.notsatria.flashcard"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

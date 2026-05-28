@@ -1,4 +1,4 @@
-package com.notsatria.starter.ui.theme
+package com.notsatria.flashcard.ui.theme
 
 import android.app.Activity
 import android.os.Build

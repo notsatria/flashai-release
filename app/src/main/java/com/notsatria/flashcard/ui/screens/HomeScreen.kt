@@ -1,4 +1,4 @@
-package com.notsatria.starter.ui.screens
+package com.notsatria.flashcard.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

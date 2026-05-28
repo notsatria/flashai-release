@@ -1,4 +1,4 @@
-package com.notsatria.starter
+package com.notsatria.flashcard
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

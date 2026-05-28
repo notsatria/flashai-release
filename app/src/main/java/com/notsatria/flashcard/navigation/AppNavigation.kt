@@ -1,4 +1,4 @@
-package com.notsatria.starter.navigation
+package com.notsatria.flashcard.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
-import com.notsatria.starter.ui.screens.HomeScreen
+import com.notsatria.flashcard.ui.screens.HomeScreen
 import org.koin.compose.koinInject
 
 @Composable
