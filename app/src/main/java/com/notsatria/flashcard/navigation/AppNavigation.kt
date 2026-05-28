@@ -10,7 +10,11 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.notsatria.flashcard.model.sampleDecks
+import com.notsatria.flashcard.ui.screens.DeckDetailScreen
+import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.HomeScreen
+import com.notsatria.flashcard.ui.screens.StudyModeScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -39,7 +43,36 @@ fun AppNavigation(
         ),
         entryProvider = entryProvider {
             entry<AppRoute.Home> {
-                HomeScreen()
+                HomeScreen(
+                    decks = sampleDecks,
+                    onDeckClick = { deck -> navigator.navigateTo(AppRoute.DeckDetail(deck.id)) },
+                )
+            }
+            entry<AppRoute.DeckDetail> { route ->
+                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
+                DeckDetailScreen(
+                    deck = deck,
+                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
+                    onBack = { navigator.navigateBack() },
+                    onStudyClick = { navigator.navigateTo(AppRoute.StudyMode(route.deckId)) },
+                    onGenerateClick = { navigator.navigateTo(AppRoute.GenerateAI(route.deckId)) },
+                )
+            }
+            entry<AppRoute.StudyMode> { route ->
+                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
+                StudyModeScreen(
+                    deck = deck,
+                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
+                    onBack = { navigator.navigateBack() },
+                )
+            }
+            entry<AppRoute.GenerateAI> { route ->
+                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
+                GenerateAIScreen(
+                    deck = deck,
+                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
+                    onBack = { navigator.navigateBack() },
+                )
             }
         },
     )

@@ -7,4 +7,13 @@ import kotlinx.serialization.Serializable
 sealed interface AppRoute : NavKey {
     @Serializable
     data object Home : AppRoute
+
+    @Serializable
+    data class DeckDetail(val deckId: String) : AppRoute
+
+    @Serializable
+    data class StudyMode(val deckId: String) : AppRoute
+
+    @Serializable
+    data class GenerateAI(val deckId: String) : AppRoute
 }
