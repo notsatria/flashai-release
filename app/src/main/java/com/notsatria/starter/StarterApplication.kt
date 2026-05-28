@@ -1,0 +1,17 @@
+package com.notsatria.starter
+
+import android.app.Application
+import com.notsatria.starter.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+
+class StarterApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        startKoin {
+            androidContext(this@StarterApplication)
+            modules(appModule)
+        }
+    }
+}
