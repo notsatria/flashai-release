@@ -14,7 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.notsatria.flashcard.model.Deck
+import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.components.DeckCard
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.theme.FlashColors

@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
-import com.notsatria.flashcard.model.sampleDecks
+import com.notsatria.flashcard.domain.model.sampleDecks
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
 import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen

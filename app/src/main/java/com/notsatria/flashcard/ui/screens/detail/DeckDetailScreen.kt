@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.notsatria.flashcard.model.Deck
+import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.components.AIGenerateButton
 import com.notsatria.flashcard.ui.components.CardItem
 import com.notsatria.flashcard.ui.components.FlashButton

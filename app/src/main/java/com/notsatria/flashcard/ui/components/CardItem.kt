@@ -23,7 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.notsatria.flashcard.model.FlashCard
+import com.notsatria.flashcard.domain.model.FlashCard
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing

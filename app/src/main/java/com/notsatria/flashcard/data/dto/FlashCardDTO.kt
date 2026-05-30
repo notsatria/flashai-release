@@ -1,7 +1,7 @@
 package com.notsatria.flashcard.data.dto
 
 import com.google.firebase.Timestamp
-import com.notsatria.flashcard.model.FlashCard
+import com.notsatria.flashcard.domain.model.FlashCard
 
 data class FlashCardDTO(
     val question: String = "",

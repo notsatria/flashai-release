@@ -1,4 +1,4 @@
-package com.notsatria.flashcard.model
+package com.notsatria.flashcard.domain.model
 
 data class DeckWithCards(
     val deck: Deck,

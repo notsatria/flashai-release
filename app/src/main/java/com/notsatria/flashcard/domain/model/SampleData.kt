@@ -1,4 +1,4 @@
-package com.notsatria.flashcard.model
+package com.notsatria.flashcard.domain.model
 
 val sampleDecks = listOf(
     Deck(

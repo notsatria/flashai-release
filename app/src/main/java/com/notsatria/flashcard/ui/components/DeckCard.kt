@@ -21,9 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.notsatria.flashcard.model.Deck
+import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing

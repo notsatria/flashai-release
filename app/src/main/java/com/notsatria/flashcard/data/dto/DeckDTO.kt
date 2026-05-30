@@ -1,7 +1,7 @@
 package com.notsatria.flashcard.data.dto
 
 import com.google.firebase.Timestamp
-import com.notsatria.flashcard.model.Deck
+import com.notsatria.flashcard.domain.model.Deck
 
 data class DeckDTO(
     val name: String = "",
