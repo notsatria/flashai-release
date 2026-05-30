@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.notsatria.flashcard" />
+                  <option name="mobileSdkAppId" value="1:64421386126:android:8e4dc2e446c207684236df" />
+                  <option name="projectId" value="flashcard-8ec1a" />
+                  <option name="projectNumber" value="64421386126" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
