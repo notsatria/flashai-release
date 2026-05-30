@@ -17,6 +17,7 @@ import com.notsatria.flashcard.ui.screens.home.HomeScreen
 import com.notsatria.flashcard.ui.screens.StudyModeScreen
 import com.notsatria.flashcard.ui.screens.login.LoginScreen
 import com.notsatria.flashcard.ui.screens.register.RegisterScreen
+import com.notsatria.flashcard.ui.screens.splash.SplashScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -24,7 +25,7 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navigator: Navigator = koinInject(),
 ) {
-    val backStack = rememberNavBackStack(AppRoute.Login)
+    val backStack = rememberNavBackStack(AppRoute.Splash)
 
     SideEffect {
         navigator.setBackStack(backStack)
@@ -44,6 +45,16 @@ fun AppNavigation(
             rememberViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
+            entry<AppRoute.Splash> {
+                SplashScreen(
+                    onNavigateToHome = {
+                        navigator.navigateAndPopUpTo(AppRoute.Home)
+                    },
+                    onNavigateToLogin = {
+                        navigator.navigateAndPopUpTo(AppRoute.Login)
+                    }
+                )
+            }
             entry<AppRoute.Login> {
                 LoginScreen(
                     onNavigateToRegister = {
