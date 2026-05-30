@@ -1,4 +1,4 @@
-package com.notsatria.flashcard.ui.screens
+package com.notsatria.flashcard.ui.screens.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,11 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.notsatria.flashcard.model.Deck
 import com.notsatria.flashcard.ui.components.AIGenerateButton
 import com.notsatria.flashcard.ui.components.CardItem
 import com.notsatria.flashcard.ui.components.FlashButton
+import com.notsatria.flashcard.ui.screens.MissingDeckScreen
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing

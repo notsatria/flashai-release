@@ -1,4 +1,4 @@
-package com.notsatria.flashcard.ui.screens
+package com.notsatria.flashcard.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +45,7 @@ fun HomeScreen(
             item {
                 Column {
                     Text(
-                        text = "Halo, Selamat Belajar!",
+                        text = "Halo, Selamat Belajar!👋",
                         style = FlashTypography.displayLarge,
                         color = FlashColors.Gray900,
                     )
