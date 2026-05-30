@@ -8,6 +8,9 @@ import com.notsatria.flashcard.domain.repository.AuthRepository
 import com.notsatria.flashcard.domain.repository.DeckRepository
 import com.notsatria.flashcard.navigation.AppNavigator
 import com.notsatria.flashcard.navigation.Navigator
+import com.notsatria.flashcard.ui.screens.login.LoginViewModel
+import com.notsatria.flashcard.ui.screens.register.RegisterViewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -18,4 +21,7 @@ val appModule = module {
 
     single<AuthRepository> { FirebaseAuthRepository(get()) }
     single<DeckRepository> { FirebaseDeckRepository(get(), get()) }
+
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
 }

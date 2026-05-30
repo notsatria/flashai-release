@@ -23,6 +23,12 @@ class AppNavigator : Navigator {
         }
     }
 
+    override fun navigateAndPopUpTo(route: AppRoute) {
+        val stack = requireBackStack()
+        stack.clear()
+        stack.add(route)
+    }
+
     private fun requireBackStack(): NavBackStack {
         return checkNotNull(backStack) { "Navigator back stack has not been attached." }
     }

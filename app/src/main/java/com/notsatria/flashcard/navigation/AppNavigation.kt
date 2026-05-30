@@ -15,6 +15,8 @@ import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
 import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
 import com.notsatria.flashcard.ui.screens.StudyModeScreen
+import com.notsatria.flashcard.ui.screens.login.LoginScreen
+import com.notsatria.flashcard.ui.screens.register.RegisterScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -22,7 +24,7 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navigator: Navigator = koinInject(),
 ) {
-    val backStack = rememberNavBackStack(AppRoute.Home)
+    val backStack = rememberNavBackStack(AppRoute.Login)
 
     SideEffect {
         navigator.setBackStack(backStack)
@@ -42,6 +44,26 @@ fun AppNavigation(
             rememberViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
+            entry<AppRoute.Login> {
+                LoginScreen(
+                    onNavigateToRegister = {
+                        navigator.navigateAndPopUpTo(AppRoute.Register)
+                    },
+                    onNavigateToHome = {
+                        navigator.navigateAndPopUpTo(AppRoute.Home)
+                    }
+                )
+            }
+            entry<AppRoute.Register> {
+                RegisterScreen(
+                    onNavigateToLogin = {
+                        navigator.navigateAndPopUpTo(AppRoute.Login)
+                    },
+                    onNavigateToHome = {
+                        navigator.navigateAndPopUpTo(AppRoute.Home)
+                    }
+                )
+            }
             entry<AppRoute.Home> {
                 HomeScreen(
                     decks = sampleDecks,

@@ -6,4 +6,5 @@ interface Navigator {
     fun setBackStack(backStack: NavBackStack)
     fun navigateTo(route: AppRoute)
     fun navigateBack(): Boolean
+    fun navigateAndPopUpTo(route: AppRoute)
 }
