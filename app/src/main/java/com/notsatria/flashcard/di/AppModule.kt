@@ -8,6 +8,7 @@ import com.notsatria.flashcard.domain.repository.AuthRepository
 import com.notsatria.flashcard.domain.repository.DeckRepository
 import com.notsatria.flashcard.navigation.AppNavigator
 import com.notsatria.flashcard.navigation.Navigator
+import com.notsatria.flashcard.ui.screens.home.HomeViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginViewModel
 import com.notsatria.flashcard.ui.screens.register.RegisterViewModel
 import com.notsatria.flashcard.ui.screens.splash.SplashViewModel
@@ -26,4 +27,5 @@ val appModule = module {
     viewModelOf(::SplashViewModel)
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::HomeViewModel)
 }

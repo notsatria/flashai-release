@@ -77,7 +77,6 @@ fun AppNavigation(
             }
             entry<AppRoute.Home> {
                 HomeScreen(
-                    decks = sampleDecks,
                     onDeckClick = { deck -> navigator.navigateTo(AppRoute.DeckDetail(deck.id)) },
                 )
             }

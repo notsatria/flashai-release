@@ -13,19 +13,34 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.components.DeckCard
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
-    decks: List<Deck>,
     onDeckClick: (Deck) -> Unit,
     modifier: Modifier = Modifier,
+) {
+    val viewModel: HomeViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeScreenContent(modifier, uiState = uiState, onDeckClick = onDeckClick)
+}
+
+@Composable
+fun HomeScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: HomeUiState = HomeUiState(),
+    onDeckClick: (Deck) -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -51,14 +66,14 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(FlashSpacing.xs))
                     Text(
-                        text = "Kamu punya ${decks.size} deck aktif",
+                        text = "Kamu punya ${uiState.decks.size} deck aktif",
                         style = FlashTypography.bodyMedium,
                         color = FlashColors.Gray400,
                     )
                     Spacer(modifier = Modifier.height(FlashSpacing.md))
                 }
             }
-            itemsIndexed(decks, key = { _, deck -> deck.id }) { index, deck ->
+            itemsIndexed(uiState.decks, key = { _, deck -> deck.id }) { index, deck ->
                 DeckCard(
                     deck = deck,
                     deckIndex = index,
