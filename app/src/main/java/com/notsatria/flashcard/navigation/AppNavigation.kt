@@ -15,6 +15,7 @@ import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
 import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
 import com.notsatria.flashcard.ui.screens.StudyModeScreen
+import com.notsatria.flashcard.ui.screens.add_deck.AddDeckScreen
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginScreen
 import com.notsatria.flashcard.ui.screens.register.RegisterScreen
@@ -81,7 +82,15 @@ fun AppNavigation(
             entry<AppRoute.Home> {
                 HomeScreen(
                     onDeckClick = { deck -> navigator.navigateTo(AppRoute.DeckDetail(deck.id)) },
+                    onAddDeckClick = {
+                        navigator.navigateTo(AppRoute.AddDeck)
+                    }
                 )
+            }
+            entry<AppRoute.AddDeck> {
+                AddDeckScreen(onBack = {
+                    navigator.navigateBack()
+                })
             }
             entry<AppRoute.DeckDetail> { route ->
                 val viewModel: DeckDetailViewModel = koinViewModel(

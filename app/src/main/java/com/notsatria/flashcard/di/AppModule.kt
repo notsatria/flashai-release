@@ -8,6 +8,7 @@ import com.notsatria.flashcard.domain.repository.AuthRepository
 import com.notsatria.flashcard.domain.repository.DeckRepository
 import com.notsatria.flashcard.navigation.AppNavigator
 import com.notsatria.flashcard.navigation.Navigator
+import com.notsatria.flashcard.ui.screens.add_deck.AddDeckViewModel
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.home.HomeViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginViewModel
@@ -30,6 +31,7 @@ val appModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::AddDeckViewModel)
     viewModel { parameters ->
         DeckDetailViewModel(deckId = parameters.get(), deckRepository = get())
     }

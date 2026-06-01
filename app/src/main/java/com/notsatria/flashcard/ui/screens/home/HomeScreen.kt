@@ -33,6 +33,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(
     onDeckClick: (Deck) -> Unit,
+    onAddDeckClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = koinViewModel()
@@ -49,6 +50,7 @@ fun HomeScreen(
         modifier,
         uiState = uiState,
         onDeckClick = onDeckClick,
+        onAddDeckClick = onAddDeckClick,
         snackbarHostState = snackbarHostState
     )
 }
@@ -58,13 +60,14 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
     uiState: HomeUiState = HomeUiState(),
     onDeckClick: (Deck) -> Unit = {},
+    onAddDeckClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = FlashColors.Background,
         floatingActionButton = {
-            FlashButton(text = "+ Deck Baru", onClick = {})
+            FlashButton(text = "+ Deck Baru", onClick = onAddDeckClick)
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
