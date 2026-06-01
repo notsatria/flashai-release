@@ -21,13 +21,18 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.components.AIGenerateButton
 import com.notsatria.flashcard.ui.components.CardItem
@@ -38,25 +43,58 @@ import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
 import com.notsatria.flashcard.ui.theme.getDeckColor
+import com.notsatria.flashcard.utils.rememberSnackbarHostState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DeckDetailScreen(
-    deck: Deck?,
-    deckIndex: Int,
+    modifier: Modifier = Modifier,
     onBack: () -> Unit,
     onStudyClick: () -> Unit,
     onGenerateClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: DeckDetailViewModel = koinViewModel()
 ) {
-    if (deck == null) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val snackbarHostState = rememberSnackbarHostState()
+
+    LaunchedEffect(Unit) {
+        viewModel.showSnackbar.collect { message ->
+            snackbarHostState.showSnackbar(message = message)
+        }
+    }
+
+    DeckDetailScreenContent(
+        modifier,
+        uiState = uiState,
+        onBack = onBack,
+        onStudyClick = onStudyClick,
+        onGenerateClick = onGenerateClick,
+        snackbarHostState = snackbarHostState
+    )
+}
+
+@Composable
+fun DeckDetailScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: DeckDetailUiState = DeckDetailUiState(),
+    onBack: () -> Unit = {},
+    onStudyClick: () -> Unit = {},
+    onGenerateClick: () -> Unit = {},
+    snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
+) {
+    if (uiState.deck == null) {
         MissingDeckScreen(onBack = onBack, modifier = modifier)
         return
     }
 
-    val deckColor = getDeckColor(deckIndex)
+    val deckColor = getDeckColor(1)
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = FlashColors.Background,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
         bottomBar = {
             Row(
                 modifier = Modifier
@@ -88,13 +126,13 @@ fun DeckDetailScreen(
         ) {
             item {
                 DeckHeader(
-                    deck = deck,
+                    deck = uiState.deck,
                     deckColor = deckColor,
                     onBack = onBack,
                     onStudyClick = onStudyClick,
                 )
             }
-            items(deck.cards, key = { it.id }) { card ->
+            items(uiState.deck.cards, key = { it.id }) { card ->
                 CardItem(card = card, deckColor = deckColor, onDelete = {})
             }
         }

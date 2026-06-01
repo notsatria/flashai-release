@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.notsatria.flashcard.domain.model.Deck
@@ -23,6 +27,7 @@ import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
+import com.notsatria.flashcard.utils.rememberSnackbarHostState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -32,15 +37,28 @@ fun HomeScreen(
 ) {
     val viewModel: HomeViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = rememberSnackbarHostState()
 
-    HomeScreenContent(modifier, uiState = uiState, onDeckClick = onDeckClick)
+    LaunchedEffect(Unit) {
+        viewModel.showSnackbar.collect { message ->
+            snackbarHostState.showSnackbar(message = message)
+        }
+    }
+
+    HomeScreenContent(
+        modifier,
+        uiState = uiState,
+        onDeckClick = onDeckClick,
+        snackbarHostState = snackbarHostState
+    )
 }
 
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     uiState: HomeUiState = HomeUiState(),
-    onDeckClick: (Deck) -> Unit = {}
+    onDeckClick: (Deck) -> Unit = {},
+    snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -48,6 +66,9 @@ fun HomeScreenContent(
         floatingActionButton = {
             FlashButton(text = "+ Deck Baru", onClick = {})
         },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
     ) { padding ->
         LazyColumn(
             modifier = Modifier

@@ -8,10 +8,12 @@ import com.notsatria.flashcard.domain.repository.AuthRepository
 import com.notsatria.flashcard.domain.repository.DeckRepository
 import com.notsatria.flashcard.navigation.AppNavigator
 import com.notsatria.flashcard.navigation.Navigator
+import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.home.HomeViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginViewModel
 import com.notsatria.flashcard.ui.screens.register.RegisterViewModel
 import com.notsatria.flashcard.ui.screens.splash.SplashViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -28,4 +30,7 @@ val appModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::HomeViewModel)
+    viewModel { parameters ->
+        DeckDetailViewModel(deckId = parameters.get(), deckRepository = get())
+    }
 }

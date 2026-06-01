@@ -15,10 +15,13 @@ import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
 import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
 import com.notsatria.flashcard.ui.screens.StudyModeScreen
+import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginScreen
 import com.notsatria.flashcard.ui.screens.register.RegisterScreen
 import com.notsatria.flashcard.ui.screens.splash.SplashScreen
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavigation(
@@ -81,13 +84,14 @@ fun AppNavigation(
                 )
             }
             entry<AppRoute.DeckDetail> { route ->
-                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
+                val viewModel: DeckDetailViewModel = koinViewModel(
+                    parameters = { parametersOf(route.deckId) }
+                )
                 DeckDetailScreen(
-                    deck = deck,
-                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
                     onBack = { navigator.navigateBack() },
                     onStudyClick = { navigator.navigateTo(AppRoute.StudyMode(route.deckId)) },
                     onGenerateClick = { navigator.navigateTo(AppRoute.GenerateAI(route.deckId)) },
+                    viewModel = viewModel
                 )
             }
             entry<AppRoute.StudyMode> { route ->

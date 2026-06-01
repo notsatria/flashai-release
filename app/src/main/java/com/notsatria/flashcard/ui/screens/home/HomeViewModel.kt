@@ -30,16 +30,15 @@ class HomeViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = throwable.message ?: "Gagal memuat deck."
                         )
                     }
+                    _showSnackBar.send(throwable.message ?: "Gagal memuat deck.")
                 }
                 .collect { decks ->
                     _uiState.update {
                         it.copy(
                             isLoading = false,
                             decks = decks,
-                            errorMessage = null
                         )
                     }
                 }
@@ -54,9 +53,7 @@ class HomeViewModel(
                 _showSnackBar.send("Deck berhasil dihapus.")
             }
                 .onFailure { throwable ->
-                    _uiState.update {
-                        it.copy(errorMessage = throwable.message ?: "Gagal menghapus deck.")
-                    }
+                    _showSnackBar.send(throwable.message ?: "Gagal menghapus deck.")
                 }
         }
     }
