@@ -55,12 +55,12 @@ import org.koin.androidx.compose.koinViewModel
 fun DeckDetailScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    onAddFlashCardClick: () -> Unit,
     onStudyClick: () -> Unit,
     onGenerateClick: () -> Unit,
     viewModel: DeckDetailViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val snackbarHostState = rememberSnackbarHostState()
 
     LaunchedEffect(Unit) {
@@ -75,6 +75,7 @@ fun DeckDetailScreen(
         onBack = onBack,
         onStudyClick = onStudyClick,
         onGenerateClick = onGenerateClick,
+        onAddFlashCardClick = onAddFlashCardClick,
         snackbarHostState = snackbarHostState
     )
 }
@@ -87,6 +88,7 @@ fun DeckDetailScreenContent(
     onBack: () -> Unit = {},
     onStudyClick: () -> Unit = {},
     onGenerateClick: () -> Unit = {},
+    onAddFlashCardClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
     if (uiState.deck == null) {
@@ -94,7 +96,6 @@ fun DeckDetailScreenContent(
         return
     }
 
-    val deckColor = getDeckColor(1)
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = FlashColors.Background,
@@ -119,9 +120,9 @@ fun DeckDetailScreenContent(
                 )
                 FlashButton(
                     text = "+ Tambah",
-                    onClick = {},
+                    onClick = onAddFlashCardClick,
                     modifier = Modifier.weight(1f),
-                    color = deckColor,
+                    color = uiState.deck.color,
                 )
             }
         },
@@ -141,18 +142,23 @@ fun DeckDetailScreenContent(
             }
             item { Spacer(Modifier.height(FlashSpacing.md)) }
             item {
-                Text("Daftar Kartu")
+                Text("Daftar Kartu", style = FlashTypography.titleMedium)
             }
-            item { Spacer(Modifier.height(FlashSpacing.md)) }
             item {
                 if (uiState.deck.cards.isEmpty()) {
-                    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .fillParentMaxHeight(0.5f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         EmptyState(text = "Flashcard masih kosong.")
                     }
                 }
             }
             items(uiState.deck.cards, key = { it.id }) { card ->
-                CardItem(card = card, deckColor = deckColor, onDelete = {})
+                CardItem(card = card, deckColor = uiState.deck.color, onDelete = {})
             }
         }
     }

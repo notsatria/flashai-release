@@ -16,6 +16,8 @@ import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
 import com.notsatria.flashcard.ui.screens.StudyModeScreen
 import com.notsatria.flashcard.ui.screens.add_deck.AddDeckScreen
+import com.notsatria.flashcard.ui.screens.add_flashcard.AddFlashCardScreen
+import com.notsatria.flashcard.ui.screens.add_flashcard.AddFlashCardViewModel
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginScreen
 import com.notsatria.flashcard.ui.screens.register.RegisterScreen
@@ -100,6 +102,16 @@ fun AppNavigation(
                     onBack = { navigator.navigateBack() },
                     onStudyClick = { navigator.navigateTo(AppRoute.StudyMode(route.deckId)) },
                     onGenerateClick = { navigator.navigateTo(AppRoute.GenerateAI(route.deckId)) },
+                    onAddFlashCardClick = { navigator.navigateTo(AppRoute.AddFlashCard(route.deckId)) },
+                    viewModel = viewModel
+                )
+            }
+            entry<AppRoute.AddFlashCard> { route ->
+                val viewModel: AddFlashCardViewModel = koinViewModel(
+                    parameters = { parametersOf(route.deckId) }
+                )
+                AddFlashCardScreen(
+                    onBack = { navigator.navigateBack() },
                     viewModel = viewModel
                 )
             }

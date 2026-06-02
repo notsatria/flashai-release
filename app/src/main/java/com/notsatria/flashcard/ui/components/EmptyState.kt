@@ -27,15 +27,6 @@ fun EmptyState(modifier: Modifier = Modifier, text: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painterResource(R.drawable.il_empty_state),
-            null,
-            modifier = Modifier.size(200.dp),
-            colorFilter = ColorFilter.tint(
-                FlashColors.Indigo500
-            )
-        )
-        Spacer(Modifier.height(16.dp))
         Text(text, textAlign = TextAlign.Center, style = FlashTypography.bodyLarge)
     }
 }

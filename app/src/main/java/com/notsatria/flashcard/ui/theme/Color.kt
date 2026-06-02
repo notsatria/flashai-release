@@ -10,6 +10,7 @@ object FlashColors {
     val Indigo600 = Color(0xFF4F46E5)
     val Indigo700 = Color(0xFF4338CA)
 
+    val Cyan200 = Color(0xFFdaf3ff)
     val Cyan400 = Color(0xFF22D3EE)
     val Cyan500 = Color(0xFF06B6D4)
 
@@ -22,6 +23,7 @@ object FlashColors {
     val DeckGreen = Color(0xFF22C55E)
     val DeckOrange = Color(0xFFF97316)
     val DeckTeal = Color(0xFF14B8A6)
+    val Teal200 = Color(0xFF006879)
 
     val Gray50 = Color(0xFFF9FAFB)
     val Gray100 = Color(0xFFF3F4F6)
