@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
-import com.notsatria.flashcard.domain.model.sampleDecks
+import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
 import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
@@ -104,18 +104,16 @@ fun AppNavigation(
                 )
             }
             entry<AppRoute.StudyMode> { route ->
-                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
                 StudyModeScreen(
-                    deck = deck,
-                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
+                    deck = Deck(),
+                    deckIndex = 0,
                     onBack = { navigator.navigateBack() },
                 )
             }
             entry<AppRoute.GenerateAI> { route ->
-                val deck = sampleDecks.firstOrNull { it.id == route.deckId }
                 GenerateAIScreen(
-                    deck = deck,
-                    deckIndex = sampleDecks.indexOfFirst { it.id == route.deckId }.coerceAtLeast(0),
+                    deck = Deck(),
+                    deckIndex = 0,
                     onBack = { navigator.navigateBack() },
                 )
             }

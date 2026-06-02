@@ -3,6 +3,8 @@ package com.notsatria.flashcard.ui.screens.add_deck
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.notsatria.flashcard.domain.repository.DeckRepository
+import com.notsatria.flashcard.ui.components.deckColors
+import com.notsatria.flashcard.ui.components.deckEmojis
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +13,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddDeckViewModel(private val deckRepository: DeckRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(AddDeckUiState())
+    private val _uiState = MutableStateFlow(AddDeckUiState(
+        color = deckColors[0].name,
+        emoji = deckEmojis[0].name
+    ))
     val uiState = _uiState.asStateFlow()
 
     private val _showSnackbar = Channel<String>()
@@ -44,7 +49,7 @@ class AddDeckViewModel(private val deckRepository: DeckRepository) : ViewModel()
 
             _uiState.update { it.copy(isLoading = true) }
             runCatching {
-                deckRepository.createDeck(state.title)
+                deckRepository.createDeck(state.title, state.color, state.emoji)
             }.onFailure { throwable ->
                 _uiState.update { it.copy(isLoading = false) }
                 _showSnackbar.send(throwable.message ?: "Gagal membuat deck.")

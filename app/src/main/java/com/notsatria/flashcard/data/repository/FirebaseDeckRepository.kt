@@ -9,6 +9,8 @@ import com.notsatria.flashcard.data.dto.DeckDTO
 import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.domain.model.FlashCard
 import com.notsatria.flashcard.domain.repository.DeckRepository
+import com.notsatria.flashcard.ui.components.getColorFromName
+import com.notsatria.flashcard.ui.components.getEmojiFromName
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -30,10 +32,13 @@ class FirebaseDeckRepository(
                 }
 
                 val decks = snapshots?.documents.orEmpty().map { document ->
-                    DeckDTO(
+                    Deck(
                         id = document.id,
                         name = document.getString("name").orEmpty(),
-                    ).toDomain()
+                        color = getColorFromName(document.getString("color").orEmpty()),
+                        emoji = getEmojiFromName(document.getString("emoji").orEmpty()),
+                        cards = emptyList()
+                    )
                 }
                 trySend(decks)
             }
@@ -47,6 +52,8 @@ class FirebaseDeckRepository(
         val cardsCollection = deckDocument.collection(CARDS_COLLECTION)
 
         var currentDeckName: String? = null
+        var currentDeckColor: String? = null
+        var currentDeckEmoji: String? = null
         var currentCards: List<FlashCard> = emptyList()
 
         fun sendDeck() {
@@ -55,7 +62,13 @@ class FirebaseDeckRepository(
                 if (name == null) {
                     null
                 } else {
-                    Deck(id = deckId, name = name, cards = currentCards)
+                    Deck(
+                        id = deckId,
+                        name = name,
+                        color = getColorFromName(currentDeckColor!!),
+                        emoji = currentDeckEmoji!!,
+                        cards = currentCards
+                    )
                 }
             )
         }
@@ -66,6 +79,8 @@ class FirebaseDeckRepository(
                 return@addSnapshotListener
             }
             currentDeckName = snapshot?.takeIf { it.exists() }?.getString("name")
+            currentDeckColor = snapshot?.takeIf { it.exists() }?.getString("color")
+            currentDeckEmoji = snapshot?.takeIf { it.exists() }?.getString("emoji")
             sendDeck()
         }
 
@@ -93,12 +108,14 @@ class FirebaseDeckRepository(
         }
     }
 
-    override suspend fun createDeck(name: String) {
+    override suspend fun createDeck(name: String, color: String, emoji: String) {
         val uid = getCurrentUid()
         val now = Timestamp.now()
         decksRef(uid).add(
             mapOf(
                 "name" to name.trim(),
+                "color" to color,
+                "emoji" to emoji,
                 "createdAt" to now,
                 "updatedAt" to now
             )

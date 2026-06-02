@@ -41,8 +41,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashcard.ui.components.DeckColor
+import com.notsatria.flashcard.ui.components.DeckIcon
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.components.FlashTextField
+import com.notsatria.flashcard.ui.components.deckColors
+import com.notsatria.flashcard.ui.components.deckEmojis
 import com.notsatria.flashcard.ui.theme.FlashColors
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -137,7 +141,7 @@ fun AddDeckScreenContent(
             Text("Pilih Ikon Deck")
             Spacer(Modifier.height(8.dp))
             DeckIconChooser(
-                selectedIconName = uiState.emoji.ifBlank { deckIcons.first().name },
+                selectedIconName = uiState.emoji.ifBlank { deckEmojis.first().name },
                 onIconSelected = { onEmojiChange(it.name) },
             )
             Spacer(Modifier.height(16.dp))
@@ -158,52 +162,6 @@ fun AddDeckScreenContent(
     }
 }
 
-data class DeckIcon(
-    val name: String,
-    val icon: String,
-)
-
-data class DeckColor(
-    val name: String,
-    val color: Color,
-)
-
-private val deckIcons = listOf(
-    DeckIcon(
-        "book",
-        "\uD83D\uDCDA"
-    ),
-    DeckIcon(
-        "tube",
-        "\uD83E\uDDEA"
-    ),
-    DeckIcon(
-        "globe",
-        "\uD83C\uDF0E"
-    ),
-    DeckIcon(
-        "art",
-        "\uD83C\uDFA8"
-    ),
-    DeckIcon(
-        "laptop",
-        "\uD83D\uDCBB"
-    ),
-    DeckIcon(
-        "sport",
-        "⛹\uFE0F"
-    ),
-)
-
-private val deckColors = listOf(
-    DeckColor("indigo", FlashColors.Indigo500),
-    DeckColor("purple", FlashColors.DeckPurple),
-    DeckColor("pink", FlashColors.DeckPink),
-    DeckColor("green", FlashColors.DeckGreen),
-    DeckColor("orange", FlashColors.DeckOrange),
-    DeckColor("teal", FlashColors.DeckTeal),
-)
-
 @Composable
 fun DeckIconChooser(
     selectedIconName: String,
@@ -211,7 +169,7 @@ fun DeckIconChooser(
     modifier: Modifier = Modifier,
 ) {
     LazyRow(modifier.fillMaxWidth()) {
-        items(deckIcons, key = { it.name }) { icon ->
+        items(deckEmojis, key = { it.name }) { icon ->
             val isSelected = icon.name == selectedIconName
             Surface(
                 shape = RoundedCornerShape(8.dp),
@@ -226,7 +184,7 @@ fun DeckIconChooser(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
-                        icon.icon,
+                        icon.emoji,
                         fontSize = 24.sp,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp)
                     )

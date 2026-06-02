@@ -18,11 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.notsatria.flashcard.domain.model.Deck
+import com.notsatria.flashcard.ui.components.ConfirmationDialog
 import com.notsatria.flashcard.ui.components.DeckCard
+import com.notsatria.flashcard.ui.components.EmptyState
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashSpacing
@@ -51,6 +58,7 @@ fun HomeScreen(
         uiState = uiState,
         onDeckClick = onDeckClick,
         onAddDeckClick = onAddDeckClick,
+        onDeleteDeckClick = viewModel::deleteDeck,
         snackbarHostState = snackbarHostState
     )
 }
@@ -61,6 +69,7 @@ fun HomeScreenContent(
     uiState: HomeUiState = HomeUiState(),
     onDeckClick: (Deck) -> Unit = {},
     onAddDeckClick: () -> Unit = {},
+    onDeleteDeckClick: (String) -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
     Scaffold(
@@ -73,6 +82,19 @@ fun HomeScreenContent(
             SnackbarHost(snackbarHostState)
         }
     ) { padding ->
+        if (uiState.decks.isEmpty()) {
+            Column(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                EmptyState(
+                    modifier = Modifier,
+                    text = "Deck masih kosong."
+                )
+            }
+            return@Scaffold
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -102,7 +124,7 @@ fun HomeScreenContent(
                     deck = deck,
                     deckIndex = index,
                     onClick = { onDeckClick(deck) },
-                    onDelete = {},
+                    onDelete = { onDeleteDeckClick(deck.id) },
                 )
             }
             item {

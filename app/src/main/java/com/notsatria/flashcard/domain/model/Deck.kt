@@ -1,9 +1,13 @@
 package com.notsatria.flashcard.domain.model
 
+import androidx.compose.ui.graphics.Color
+
 data class Deck(
-    val id: String,
-    val name: String,
-    val cards: List<FlashCard>,
+    val id: String = "",
+    val name: String = "",
+    val emoji: String = "",
+    val color: Color = Color.White,
+    val cards: List<FlashCard> = emptyList(),
 ) {
     val cardCount: Int
         get() = cards.size

@@ -8,13 +8,7 @@ data class DeckDTO(
     val name: String = "",
     val createdAt: Timestamp? = null,
     val updatedAt: Timestamp? = null,
-) {
-    fun toDomain(): Deck = Deck(
-        id = id,
-        name = name,
-        cards = emptyList()
-    )
-}
+)
 
 data class DeckRequest(
     val name: String,
