@@ -13,10 +13,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddDeckViewModel(private val deckRepository: DeckRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(AddDeckUiState(
-        color = deckColors[0].name,
-        emoji = deckEmojis[0].name
-    ))
+    private val _uiState = MutableStateFlow(
+        AddDeckUiState(
+            color = deckColors[0].name,
+            emoji = deckEmojis[0].name
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val _showSnackbar = Channel<String>()
@@ -49,7 +51,7 @@ class AddDeckViewModel(private val deckRepository: DeckRepository) : ViewModel()
 
             _uiState.update { it.copy(isLoading = true) }
             runCatching {
-                deckRepository.createDeck(state.title, state.color, state.emoji)
+                deckRepository.createDeck(state.title, state.description, state.color, state.emoji)
             }.onFailure { throwable ->
                 _uiState.update { it.copy(isLoading = false) }
                 _showSnackbar.send(throwable.message ?: "Gagal membuat deck.")

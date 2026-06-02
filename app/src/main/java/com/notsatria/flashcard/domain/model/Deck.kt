@@ -6,6 +6,7 @@ data class Deck(
     val id: String = "",
     val name: String = "",
     val emoji: String = "",
+    val description: String? = null,
     val color: Color = Color.White,
     val cards: List<FlashCard> = emptyList(),
 ) {

@@ -52,12 +52,16 @@ class FirebaseDeckRepository(
         val cardsCollection = deckDocument.collection(CARDS_COLLECTION)
 
         var currentDeckName: String? = null
+        var currentDeckDesc: String? = null
         var currentDeckColor: String? = null
         var currentDeckEmoji: String? = null
         var currentCards: List<FlashCard> = emptyList()
 
         fun sendDeck() {
             val name = currentDeckName
+            val desc = currentDeckDesc
+            val color = currentDeckColor
+            val emoji = currentDeckEmoji
             trySend(
                 if (name == null) {
                     null
@@ -65,8 +69,9 @@ class FirebaseDeckRepository(
                     Deck(
                         id = deckId,
                         name = name,
-                        color = getColorFromName(currentDeckColor!!),
-                        emoji = currentDeckEmoji!!,
+                        description = desc,
+                        color = getColorFromName(color!!),
+                        emoji = emoji!!,
                         cards = currentCards
                     )
                 }
@@ -79,6 +84,7 @@ class FirebaseDeckRepository(
                 return@addSnapshotListener
             }
             currentDeckName = snapshot?.takeIf { it.exists() }?.getString("name")
+            currentDeckDesc = snapshot?.takeIf { it.exists() }?.getString("description")
             currentDeckColor = snapshot?.takeIf { it.exists() }?.getString("color")
             currentDeckEmoji = snapshot?.takeIf { it.exists() }?.getString("emoji")
             sendDeck()
@@ -108,12 +114,18 @@ class FirebaseDeckRepository(
         }
     }
 
-    override suspend fun createDeck(name: String, color: String, emoji: String) {
+    override suspend fun createDeck(
+        name: String,
+        description: String?,
+        color: String,
+        emoji: String,
+    ) {
         val uid = getCurrentUid()
         val now = Timestamp.now()
         decksRef(uid).add(
             mapOf(
                 "name" to name.trim(),
+                "description" to description?.trim(),
                 "color" to color,
                 "emoji" to emoji,
                 "createdAt" to now,

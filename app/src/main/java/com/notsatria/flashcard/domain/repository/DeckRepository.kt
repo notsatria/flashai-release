@@ -8,7 +8,7 @@ interface DeckRepository {
     fun observerDecks(): Flow<List<Deck>>
     fun observeDeck(deckId: String): Flow<Deck?>
 
-    suspend fun createDeck(name: String, color: String, emoji: String)
+    suspend fun createDeck(name: String, description: String?, color: String, emoji: String)
     suspend fun deleteDeck(deckId: String)
     suspend fun addFlashCard(deckId: String, question: String, answer: String)
     suspend fun deleteFlashCard(deckId: String, cardId: String)

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,12 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.notsatria.flashcard.domain.model.FlashCard
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
+import com.notsatria.flashcard.ui.theme.FlashcardTheme
 
 @Composable
 fun CardItem(
@@ -53,7 +56,7 @@ fun CardItem(
             Spacer(modifier = Modifier.width(FlashSpacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = card.question,
+                    text = "Q: ${card.question}",
                     style = FlashTypography.bodyLarge,
                     color = FlashColors.Gray900,
                     maxLines = 2,
@@ -61,7 +64,7 @@ fun CardItem(
                 )
                 Spacer(modifier = Modifier.height(FlashSpacing.xs))
                 Text(
-                    text = card.answer,
+                    text = "A: ${card.answer}",
                     style = FlashTypography.bodyMedium,
                     color = FlashColors.Gray400,
                     maxLines = 1,
@@ -70,11 +73,23 @@ fun CardItem(
             }
             IconButton(onClick = onDelete) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Default.Edit,
                     contentDescription = "Hapus",
                     tint = FlashColors.Gray400,
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    FlashcardTheme {
+        CardItem(
+            card = FlashCard(question = "Halo", answer = "Apa "),
+            deckColor = FlashColors.Indigo500,
+            onDelete = {},
+        )
     }
 }

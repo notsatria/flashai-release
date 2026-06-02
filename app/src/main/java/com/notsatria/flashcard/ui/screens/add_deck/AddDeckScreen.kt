@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.notsatria.flashcard.ui.components.DeckColor
 import com.notsatria.flashcard.ui.components.DeckIcon
 import com.notsatria.flashcard.ui.components.FlashButton
+import com.notsatria.flashcard.ui.components.FlashCardTopBar
 import com.notsatria.flashcard.ui.components.FlashTextField
 import com.notsatria.flashcard.ui.components.deckColors
 import com.notsatria.flashcard.ui.components.deckEmojis
@@ -105,6 +106,7 @@ fun AddDeckScreenContent(
                     Icon(Icons.AutoMirrored.Default.ArrowBack, null)
                 }
             })
+            FlashCardTopBar("Buat Deck Baru", onBack = onBack)
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)

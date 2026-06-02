@@ -12,12 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -32,16 +31,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.ui.components.AIGenerateButton
 import com.notsatria.flashcard.ui.components.CardItem
+import com.notsatria.flashcard.ui.components.EmptyState
 import com.notsatria.flashcard.ui.components.FlashButton
+import com.notsatria.flashcard.ui.components.FlashCardTopBar
 import com.notsatria.flashcard.ui.screens.MissingDeckScreen
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
+import com.notsatria.flashcard.ui.theme.FlashcardTheme
+import com.notsatria.flashcard.ui.theme.flashShadow
 import com.notsatria.flashcard.ui.theme.getDeckColor
 import com.notsatria.flashcard.utils.rememberSnackbarHostState
 import org.koin.androidx.compose.koinViewModel
@@ -74,6 +79,7 @@ fun DeckDetailScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckDetailScreenContent(
     modifier: Modifier = Modifier,
@@ -94,6 +100,9 @@ fun DeckDetailScreenContent(
         containerColor = FlashColors.Background,
         snackbarHost = {
             SnackbarHost(snackbarHostState)
+        },
+        topBar = {
+            FlashCardTopBar("Detail Deck", onBack = onBack)
         },
         bottomBar = {
             Row(
@@ -127,10 +136,20 @@ fun DeckDetailScreenContent(
             item {
                 DeckHeader(
                     deck = uiState.deck,
-                    deckColor = deckColor,
-                    onBack = onBack,
                     onStudyClick = onStudyClick,
                 )
+            }
+            item { Spacer(Modifier.height(FlashSpacing.md)) }
+            item {
+                Text("Daftar Kartu")
+            }
+            item { Spacer(Modifier.height(FlashSpacing.md)) }
+            item {
+                if (uiState.deck.cards.isEmpty()) {
+                    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                        EmptyState(text = "Flashcard masih kosong.")
+                    }
+                }
             }
             items(uiState.deck.cards, key = { it.id }) { card ->
                 CardItem(card = card, deckColor = deckColor, onDelete = {})
@@ -142,33 +161,48 @@ fun DeckDetailScreenContent(
 @Composable
 private fun DeckHeader(
     deck: Deck,
-    deckColor: Color,
-    onBack: () -> Unit,
     onStudyClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .flashShadow(
+                color = deck.color.copy(alpha = 0.25f),
+                borderRadius = 24.dp,
+                blurRadius = 32.dp,
+            )
             .clip(FlashShape.large)
-            .background(Brush.horizontalGradient(listOf(deckColor, deckColor.copy(alpha = 0.78f))))
-            .statusBarsPadding()
+            .background(
+                Brush.horizontalGradient(
+                    listOf(
+                        deck.color,
+                        deck.color.copy(alpha = 0.78f)
+                    )
+                )
+            )
             .padding(FlashSpacing.md),
     ) {
         Column {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .clip(FlashShape.full)
+                    .background(color = Color.White.copy(alpha = 0.3f))
+            ) {
+                Text(
+                    text = "${deck.cardCount} kartu",
+                    style = FlashTypography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.78f),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                )
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Kembali",
-                        tint = Color.White,
-                    )
-                }
                 Text(
                     text = deck.name,
-                    modifier = Modifier.weight(1f),
                     style = FlashTypography.titleLarge,
                     color = Color.White,
                 )
+                Spacer(Modifier.weight(1f))
                 IconButton(onClick = onStudyClick) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
@@ -178,11 +212,26 @@ private fun DeckHeader(
                 }
             }
             Spacer(modifier = Modifier.height(FlashSpacing.sm))
-            Text(
-                text = "${deck.cardCount} kartu",
-                style = FlashTypography.bodyLarge,
-                color = Color.White.copy(alpha = 0.78f),
-            )
+            if (deck.description != null)
+                Text(
+                    text = deck.description,
+                    style = FlashTypography.bodyMedium,
+                    color = Color.White,
+                )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DeckHeaderPreview() {
+    FlashcardTheme {
+        DeckHeader(
+            deck = Deck(
+                color = FlashColors.Indigo500,
+                name = "Deck baru",
+                description = "Halo"
+            )
+        ) { }
     }
 }
