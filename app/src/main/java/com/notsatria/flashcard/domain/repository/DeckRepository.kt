@@ -9,6 +9,13 @@ interface DeckRepository {
     fun observeDeck(deckId: String): Flow<Deck?>
 
     suspend fun createDeck(name: String, description: String?, color: String, emoji: String)
+    suspend fun updateDeck(
+        deckId: String,
+        name: String,
+        description: String?,
+        color: String,
+        emoji: String,
+    )
     suspend fun deleteDeck(deckId: String)
     suspend fun addFlashCard(deckId: String, question: String, answer: String)
     suspend fun deleteFlashCard(deckId: String, cardId: String)

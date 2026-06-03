@@ -82,7 +82,8 @@ class FirebaseDeckRepository(
                         description = desc,
                         color = getColorFromName(color!!),
                         emoji = emoji!!,
-                        cards = currentCards
+                        cards = currentCards,
+                        cardCount = currentCards.size,
                     )
                 }
             )
@@ -145,9 +146,35 @@ class FirebaseDeckRepository(
         ).await()
     }
 
+    override suspend fun updateDeck(
+        deckId: String,
+        name: String,
+        description: String?,
+        color: String,
+        emoji: String
+    ) {
+        val uid = getCurrentUid()
+        decksRef(uid).document(deckId).update(
+            mapOf(
+                "name" to name.trim(),
+                "description" to description?.trim(),
+                "color" to color,
+                "emoji" to emoji,
+                "updatedAt" to Timestamp.now(),
+            )
+        ).await()
+    }
+
     override suspend fun deleteDeck(deckId: String) {
         val uid = getCurrentUid()
-        decksRef(uid).document(deckId).delete().await()
+        val deckDocument = decksRef(uid).document(deckId)
+        val cardDocuments = deckDocument.collection(CARDS_COLLECTION).get().await().documents
+        firestore.batch().apply {
+            cardDocuments.forEach { cardDocument ->
+                delete(cardDocument.reference)
+            }
+            delete(deckDocument)
+        }.commit().await()
     }
 
     override suspend fun addFlashCard(

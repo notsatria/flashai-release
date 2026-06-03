@@ -18,21 +18,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,14 +37,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashcard.ui.components.ConfirmationDialog
 import com.notsatria.flashcard.ui.components.DeckColor
 import com.notsatria.flashcard.ui.components.DeckIcon
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.components.FlashCardTopBar
 import com.notsatria.flashcard.ui.components.FlashTextField
+import com.notsatria.flashcard.ui.components.LoadingScreen
 import com.notsatria.flashcard.ui.components.deckColors
 import com.notsatria.flashcard.ui.components.deckEmojis
 import com.notsatria.flashcard.ui.theme.FlashColors
+import com.notsatria.flashcard.ui.theme.FlashSpacing
+import com.notsatria.flashcard.ui.theme.FlashcardTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -82,10 +82,10 @@ fun AddDeckScreen(
         onEmojiChange = viewModel::onEmojiChange,
         onColorChange = viewModel::onColorChange,
         onAddDeck = viewModel::addDeck,
+        onDeleteDeck = viewModel::deleteDeck,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDeckScreenContent(
     modifier: Modifier = Modifier,
@@ -97,21 +97,27 @@ fun AddDeckScreenContent(
     onEmojiChange: (String) -> Unit = {},
     onColorChange: (String) -> Unit = {},
     onAddDeck: () -> Unit = {},
+    onDeleteDeck: () -> Unit = {},
 ) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier,
         topBar = {
-            TopAppBar(title = { Text("Buat Deck Baru") }, navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Default.ArrowBack, null)
-                }
-            })
-            FlashCardTopBar("Buat Deck Baru", onBack = onBack)
+            FlashCardTopBar(
+                title = if (uiState.isEditMode) "Edit Deck" else "Buat Deck Baru",
+                onBack = onBack
+            )
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
     ) { innerPadding ->
+        if (uiState.isLoadingDeck) {
+            LoadingScreen()
+            return@Scaffold
+        }
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -153,14 +159,36 @@ fun AddDeckScreenContent(
                 selectedColorName = uiState.color.ifBlank { deckColors.first().name },
                 onColorSelected = { onColorChange(it.name) },
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(FlashSpacing.lg))
             FlashButton(
-                "Buat Deck Sekarang",
+                text = if (uiState.isEditMode) "Simpan Perubahan" else "Buat Deck Sekarang",
                 onClick = onAddDeck,
                 modifier = Modifier.fillMaxWidth(),
                 isLoading = uiState.isLoading,
             )
+            if (uiState.isEditMode) {
+                Spacer(Modifier.height(12.dp))
+                FlashButton(
+                    text = "Hapus Deck",
+                    onClick = { showDeleteConfirmation = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    color = FlashColors.DeckPink,
+                    isLoading = uiState.isDeleting,
+                )
+            }
         }
+    }
+
+    if (showDeleteConfirmation) {
+        ConfirmationDialog(
+            title = "Hapus deck?",
+            message = "Deck dan kartu di dalamnya akan dihapus.",
+            onDismiss = { showDeleteConfirmation = false },
+            onConfirm = {
+                showDeleteConfirmation = false
+                onDeleteDeck()
+            },
+        )
     }
 }
 
@@ -241,6 +269,14 @@ fun DeckColorChooser(
             }
             Spacer(Modifier.width(14.dp))
         }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    FlashcardTheme {
+        AddDeckScreenContent()
     }
 }
 

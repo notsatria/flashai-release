@@ -124,7 +124,6 @@ fun HomeScreenContent(
                     deck = deck,
                     deckIndex = index,
                     onClick = { onDeckClick(deck) },
-                    onDelete = { onDeleteDeckClick(deck.id) },
                 )
             }
             item {

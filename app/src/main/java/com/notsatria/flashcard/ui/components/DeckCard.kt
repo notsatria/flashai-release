@@ -40,7 +40,6 @@ fun DeckCard(
     deck: Deck,
     deckIndex: Int,
     onClick: () -> Unit,
-    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val deckColor = getDeckColor(deckIndex)
@@ -67,20 +66,6 @@ fun DeckCard(
                     Text(deck.emoji, style = FlashTypography.titleLarge, color = deckColor)
                 }
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = onDelete) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Hapus",
-                        tint = FlashColors.Gray400,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(FlashSpacing.md))
-
-            Column {
-                Text(deck.name, style = FlashTypography.titleMedium, color = FlashColors.Gray900)
-                Spacer(modifier = Modifier.size(FlashSpacing.xs))
                 Box(
                     modifier = Modifier
                         .clip(FlashShape.full)
@@ -94,6 +79,10 @@ fun DeckCard(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(FlashSpacing.md))
+
+            Text(deck.name, style = FlashTypography.titleMedium, color = FlashColors.Gray900)
 
             Spacer(modifier = Modifier.height(FlashSpacing.md))
 
@@ -112,7 +101,11 @@ fun DeckCard(
             Row(Modifier.fillMaxWidth()) {
                 Text("Progress: 40%")
                 Spacer(Modifier.weight(1f))
-                Text("Lanjut Belajar", color = FlashColors.Indigo500, fontWeight = FontWeight.Normal)
+                Text(
+                    "Lanjut Belajar",
+                    color = FlashColors.Indigo500,
+                    fontWeight = FontWeight.Normal
+                )
             }
         }
     }
@@ -133,7 +126,6 @@ private fun Preview() {
             ),
             deckIndex = 0,
             onClick = {},
-            onDelete = {},
         )
     }
 }

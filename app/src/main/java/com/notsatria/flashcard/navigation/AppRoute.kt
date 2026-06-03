@@ -18,7 +18,7 @@ sealed interface AppRoute : NavKey {
     data object Home : AppRoute
 
     @Serializable
-    data object AddDeck : AppRoute
+    data class AddDeck(val deckId: String? = null) : AppRoute
 
     @Serializable
     data class DeckDetail(val deckId: String) : AppRoute

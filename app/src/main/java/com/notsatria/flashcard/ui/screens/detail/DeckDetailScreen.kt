@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -58,6 +59,7 @@ fun DeckDetailScreen(
     onAddFlashCardClick: () -> Unit,
     onStudyClick: () -> Unit,
     onGenerateClick: () -> Unit,
+    onEditDeckClick: (String) -> Unit,
     viewModel: DeckDetailViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -76,6 +78,7 @@ fun DeckDetailScreen(
         onStudyClick = onStudyClick,
         onGenerateClick = onGenerateClick,
         onAddFlashCardClick = onAddFlashCardClick,
+        onEditDeckClick = onEditDeckClick,
         snackbarHostState = snackbarHostState
     )
 }
@@ -89,6 +92,7 @@ fun DeckDetailScreenContent(
     onStudyClick: () -> Unit = {},
     onGenerateClick: () -> Unit = {},
     onAddFlashCardClick: () -> Unit = {},
+    onEditDeckClick: (String) -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
     if (uiState.deck == null) {
@@ -103,7 +107,11 @@ fun DeckDetailScreenContent(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            FlashCardTopBar("Detail Deck", onBack = onBack)
+            FlashCardTopBar("Detail Deck", onBack = onBack, actions = {
+                IconButton(onClick = { onEditDeckClick(uiState.deck.id) }) {
+                    Icon(Icons.Default.Edit, null)
+                }
+            })
         },
         bottomBar = {
             Row(

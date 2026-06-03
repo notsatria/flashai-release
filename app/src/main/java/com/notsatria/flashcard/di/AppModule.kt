@@ -37,7 +37,9 @@ val appModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::HomeViewModel)
-    viewModelOf(::AddDeckViewModel)
+    viewModel { parameters ->
+        AddDeckViewModel(deckRepository = get(), deckId = parameters.get())
+    }
     viewModel { parameters ->
         DeckDetailViewModel(deckId = parameters.get(), deckRepository = get())
     }
