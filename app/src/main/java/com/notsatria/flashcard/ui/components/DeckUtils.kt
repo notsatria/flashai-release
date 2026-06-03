@@ -21,8 +21,8 @@ fun getColorFromName(name: String): Color {
 }
 
 fun getEmojiFromName(name: String): String {
-    val nameIndex = deckEmojis.indexOfFirst { deckColor ->
-        deckColor.name == name
+    val nameIndex = deckEmojis.indexOfFirst { deckEmoji ->
+        deckEmoji.name == name
     }
     return if (nameIndex == -1) deckEmojis[0].emoji else deckEmojis[nameIndex].emoji
 }

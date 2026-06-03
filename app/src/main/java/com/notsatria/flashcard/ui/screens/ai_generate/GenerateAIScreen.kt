@@ -194,7 +194,7 @@ fun GenerateAIScreenContent(
                     )
                 }
                 items(uiState.generatedCards, key = { it.id }) { card ->
-                    CardItem(card = card, deckColor = deck?.color ?: FlashColors.Indigo500, onDelete = {})
+                    CardItem(card = card, deckColor = deck?.color ?: FlashColors.Indigo500)
                 }
                 item {
                     FlashButton(

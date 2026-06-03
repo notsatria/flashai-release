@@ -36,8 +36,7 @@ import com.notsatria.flashcard.ui.theme.FlashcardTheme
 fun CardItem(
     card: FlashCard,
     deckColor: Color,
-    onDelete: () -> Unit = {},
-    onEdit: () -> Unit = onDelete,
+    onEdit: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -90,7 +89,6 @@ private fun Preview() {
         CardItem(
             card = FlashCard(question = "Halo", answer = "Apa "),
             deckColor = FlashColors.Indigo500,
-            onDelete = {},
         )
     }
 }
