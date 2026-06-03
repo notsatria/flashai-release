@@ -21,13 +21,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashcard.ui.components.ConfirmationDialog
 import com.notsatria.flashcard.ui.components.FlashButton
 import com.notsatria.flashcard.ui.components.FlashCardTopBar
 import com.notsatria.flashcard.ui.components.FlashTextField
+import com.notsatria.flashcard.ui.components.LoadingScreen
 import com.notsatria.flashcard.ui.theme.FlashColors
 import com.notsatria.flashcard.ui.theme.FlashShape
 import com.notsatria.flashcard.ui.theme.FlashSpacing
@@ -63,7 +68,9 @@ fun AddFlashCardScreen(
         onSave = viewModel::submit,
         uiState = uiState,
         onQuestionChange = viewModel::onQuestionChange,
-        onAnswerChange = viewModel::onAnswerChange
+        onAnswerChange = viewModel::onAnswerChange,
+        onDelete = viewModel::deleteFlashCard,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -72,21 +79,29 @@ fun AddFlashCardScreenContent(
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onSave: () -> Unit = {},
+    onDelete: () -> Unit = {},
     onQuestionChange: (String) -> Unit = {},
     onAnswerChange: (String) -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState(),
     uiState: AddFlashCardUiState = AddFlashCardUiState()
 ) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier,
         topBar = {
             FlashCardTopBar(
-                "Tambah Flashcard",
+                title = if (uiState.isEditMode) "Edit Flashcard" else "Tambah Flashcard",
                 onBack = onBack
             )
         }, snackbarHost = {
             SnackbarHost(snackbarHostState)
         }) { padding ->
+        if (uiState.isLoadingCard) {
+            LoadingScreen()
+            return@Scaffold
+        }
+
         LazyColumn(
             Modifier
                 .fillMaxSize()
@@ -149,13 +164,37 @@ fun AddFlashCardScreenContent(
             item { Spacer(Modifier.height(FlashSpacing.lg)) }
             item {
                 FlashButton(
-                    "Simpan Kartu",
+                    text = if (uiState.isEditMode) "Simpan Perubahan" else "Simpan Kartu",
                     onClick = onSave,
                     modifier = Modifier.fillMaxWidth(),
                     isLoading = uiState.isLoading
                 )
             }
+            if (uiState.isEditMode) {
+                item { Spacer(Modifier.height(FlashSpacing.md)) }
+                item {
+                    FlashButton(
+                        text = "Hapus Flashcard",
+                        onClick = { showDeleteConfirmation = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        color = FlashColors.DeckPink,
+                        isLoading = uiState.isDeleting,
+                    )
+                }
+            }
         }
+    }
+
+    if (showDeleteConfirmation) {
+        ConfirmationDialog(
+            title = "Hapus flashcard?",
+            message = "Flashcard ini akan dihapus dari deck.",
+            onDismiss = { showDeleteConfirmation = false },
+            onConfirm = {
+                showDeleteConfirmation = false
+                onDelete()
+            },
+        )
     }
 }
 

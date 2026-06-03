@@ -23,7 +23,7 @@ sealed interface AppRoute : NavKey {
     @Serializable
     data class DeckDetail(val deckId: String) : AppRoute
     @Serializable
-    data class AddFlashCard(val deckId: String) : AppRoute
+    data class AddFlashCard(val deckId: String, val cardId: String? = null) : AppRoute
 
     @Serializable
     data class StudyMode(val deckId: String) : AppRoute

@@ -48,7 +48,6 @@ import com.notsatria.flashcard.ui.theme.FlashSpacing
 import com.notsatria.flashcard.ui.theme.FlashTypography
 import com.notsatria.flashcard.ui.theme.FlashcardTheme
 import com.notsatria.flashcard.ui.theme.flashShadow
-import com.notsatria.flashcard.ui.theme.getDeckColor
 import com.notsatria.flashcard.utils.rememberSnackbarHostState
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,6 +58,7 @@ fun DeckDetailScreen(
     onAddFlashCardClick: () -> Unit,
     onStudyClick: () -> Unit,
     onGenerateClick: () -> Unit,
+    onEditFlashCardClick: (String) -> Unit,
     onEditDeckClick: (String) -> Unit,
     viewModel: DeckDetailViewModel = koinViewModel()
 ) {
@@ -78,6 +78,7 @@ fun DeckDetailScreen(
         onStudyClick = onStudyClick,
         onGenerateClick = onGenerateClick,
         onAddFlashCardClick = onAddFlashCardClick,
+        onEditFlashCardClick = onEditFlashCardClick,
         onEditDeckClick = onEditDeckClick,
         snackbarHostState = snackbarHostState
     )
@@ -92,6 +93,7 @@ fun DeckDetailScreenContent(
     onStudyClick: () -> Unit = {},
     onGenerateClick: () -> Unit = {},
     onAddFlashCardClick: () -> Unit = {},
+    onEditFlashCardClick: (String) -> Unit = {},
     onEditDeckClick: (String) -> Unit = {},
     snackbarHostState: SnackbarHostState = rememberSnackbarHostState()
 ) {
@@ -167,7 +169,11 @@ fun DeckDetailScreenContent(
                 }
             }
             items(uiState.deck.cards, key = { it.id }) { card ->
-                CardItem(card = card, deckColor = uiState.deck.color, onDelete = {})
+                CardItem(
+                    card = card,
+                    deckColor = uiState.deck.color,
+                    onEdit = { onEditFlashCardClick(card.id) },
+                )
             }
         }
     }

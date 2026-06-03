@@ -44,7 +44,11 @@ val appModule = module {
         DeckDetailViewModel(deckId = parameters.get(), deckRepository = get())
     }
     viewModel { parameters ->
-        AddFlashCardViewModel(deckId = parameters.get(), deckRepository = get())
+        AddFlashCardViewModel(
+            deckId = parameters.get(),
+            cardId = parameters.get(),
+            deckRepository = get(),
+        )
     }
     viewModel { parameters ->
         GenerateAIViewModel(

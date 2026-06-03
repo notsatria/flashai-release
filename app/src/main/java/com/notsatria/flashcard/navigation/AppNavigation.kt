@@ -109,13 +109,16 @@ fun AppNavigation(
                     onStudyClick = { navigator.navigateTo(AppRoute.StudyMode(route.deckId)) },
                     onGenerateClick = { navigator.navigateTo(AppRoute.GenerateAI(route.deckId)) },
                     onAddFlashCardClick = { navigator.navigateTo(AppRoute.AddFlashCard(route.deckId)) },
+                    onEditFlashCardClick = { cardId ->
+                        navigator.navigateTo(AppRoute.AddFlashCard(route.deckId, cardId))
+                    },
                     onEditDeckClick = { navigator.navigateTo(AppRoute.AddDeck(route.deckId)) },
                     viewModel = viewModel
                 )
             }
             entry<AppRoute.AddFlashCard> { route ->
                 val viewModel: AddFlashCardViewModel = koinViewModel(
-                    parameters = { parametersOf(route.deckId) }
+                    parameters = { parametersOf(route.deckId, route.cardId.orEmpty()) }
                 )
                 AddFlashCardScreen(
                     onBack = { navigator.navigateBack() },

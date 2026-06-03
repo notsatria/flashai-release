@@ -36,7 +36,8 @@ import com.notsatria.flashcard.ui.theme.FlashcardTheme
 fun CardItem(
     card: FlashCard,
     deckColor: Color,
-    onDelete: () -> Unit,
+    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = onDelete,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -71,10 +72,10 @@ fun CardItem(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            IconButton(onClick = onDelete) {
+            IconButton(onClick = onEdit) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Hapus",
+                    contentDescription = "Edit",
                     tint = FlashColors.Gray400,
                 )
             }
