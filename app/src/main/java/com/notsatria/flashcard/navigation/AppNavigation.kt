@@ -89,7 +89,10 @@ fun AppNavigation(
                     onDeckClick = { deck -> navigator.navigateTo(AppRoute.DeckDetail(deck.id)) },
                     onAddDeckClick = {
                         navigator.navigateTo(AppRoute.AddDeck())
-                    }
+                    },
+                    onLogoutSuccess = {
+                        navigator.navigateAndPopUpTo(AppRoute.Login)
+                    },
                 )
             }
             entry<AppRoute.AddDeck> {

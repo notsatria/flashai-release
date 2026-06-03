@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.KoinApplication.Companion.init
 
 class HomeViewModel(
     private val deckRepository: DeckRepository,
@@ -60,5 +59,6 @@ class HomeViewModel(
 
     fun signOut() {
         authRepository.signOut()
+        _uiState.update { it.copy(isLoggedOut = true) }
     }
 }
