@@ -2,19 +2,23 @@ package com.notsatria.flashcard.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.notsatria.flashcard.data.repository.GroqAIFlashCardRepository
 import com.notsatria.flashcard.data.repository.FirebaseAuthRepository
 import com.notsatria.flashcard.data.repository.FirebaseDeckRepository
+import com.notsatria.flashcard.domain.repository.AIFlashCardRepository
 import com.notsatria.flashcard.domain.repository.AuthRepository
 import com.notsatria.flashcard.domain.repository.DeckRepository
 import com.notsatria.flashcard.navigation.AppNavigator
 import com.notsatria.flashcard.navigation.Navigator
 import com.notsatria.flashcard.ui.screens.add_deck.AddDeckViewModel
 import com.notsatria.flashcard.ui.screens.add_flashcard.AddFlashCardViewModel
+import com.notsatria.flashcard.ui.screens.ai_generate.GenerateAIViewModel
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.home.HomeViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginViewModel
 import com.notsatria.flashcard.ui.screens.register.RegisterViewModel
 import com.notsatria.flashcard.ui.screens.splash.SplashViewModel
+import com.notsatria.flashcard.ui.screens.study_mode.StudyModeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -27,6 +31,7 @@ val appModule = module {
 
     single<AuthRepository> { FirebaseAuthRepository(get()) }
     single<DeckRepository> { FirebaseDeckRepository(get(), get()) }
+    single<AIFlashCardRepository> { GroqAIFlashCardRepository() }
 
     viewModelOf(::SplashViewModel)
     viewModelOf(::LoginViewModel)
@@ -38,5 +43,15 @@ val appModule = module {
     }
     viewModel { parameters ->
         AddFlashCardViewModel(deckId = parameters.get(), deckRepository = get())
+    }
+    viewModel { parameters ->
+        GenerateAIViewModel(
+            deckId = parameters.get(),
+            deckRepository = get(),
+            aiFlashCardRepository = get(),
+        )
+    }
+    viewModel { parameters ->
+        StudyModeViewModel(get(), parameters.get())
     }
 }

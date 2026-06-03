@@ -1,11 +1,11 @@
 package com.notsatria.flashcard.data.repository
 
-import android.R.attr.name
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.notsatria.flashcard.data.dto.DeckDTO
 import com.notsatria.flashcard.domain.model.Deck
 import com.notsatria.flashcard.domain.model.FlashCard
 import com.notsatria.flashcard.domain.repository.DeckRepository
@@ -14,8 +14,8 @@ import com.notsatria.flashcard.ui.components.getEmojiFromName
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.text.trim
 
 class FirebaseDeckRepository(
     private val firestore: FirebaseFirestore,
@@ -31,13 +31,23 @@ class FirebaseDeckRepository(
                     return@addSnapshotListener
                 }
 
-                val decks = snapshots?.documents.orEmpty().map { document ->
+                val documents = snapshots?.documents.orEmpty()
+                documents
+                    .filter { !it.contains("cardCount") }
+                    .forEach { document ->
+                        launch {
+                            backfillCardCountIfMissing(document.reference)
+                        }
+                    }
+
+                val decks = documents.map { document ->
                     Deck(
                         id = document.id,
                         name = document.getString("name").orEmpty(),
                         color = getColorFromName(document.getString("color").orEmpty()),
                         emoji = getEmojiFromName(document.getString("emoji").orEmpty()),
-                        cards = emptyList()
+                        cards = emptyList(),
+                        cardCount = document.getLong("cardCount")?.toInt() ?: 0,
                     )
                 }
                 trySend(decks)
@@ -128,6 +138,7 @@ class FirebaseDeckRepository(
                 "description" to description?.trim(),
                 "color" to color,
                 "emoji" to emoji,
+                "cardCount" to 0,
                 "createdAt" to now,
                 "updatedAt" to now
             )
@@ -146,20 +157,47 @@ class FirebaseDeckRepository(
     ) {
         val uid = getCurrentUid()
         val now = Timestamp.now()
-        decksRef(uid).document(deckId).collection(CARDS_COLLECTION).add(
-            mapOf(
-                "question" to question.trim(),
-                "answer" to answer.trim(),
-                "createdAt" to now,
-                "updatedAt" to now
+        val deckDocument = decksRef(uid).document(deckId)
+        val newCardDocument = deckDocument.collection(CARDS_COLLECTION).document()
+        firestore.batch().apply {
+            set(
+                newCardDocument,
+                mapOf(
+                    "question" to question.trim(),
+                    "answer" to answer.trim(),
+                    "createdAt" to now,
+                    "updatedAt" to now
+                )
             )
-        ).await()
+            update(
+                deckDocument,
+                mapOf(
+                    "cardCount" to FieldValue.increment(1),
+                    "updatedAt" to now,
+                )
+            )
+        }.commit().await()
     }
 
     override suspend fun deleteFlashCard(deckId: String, cardId: String) {
         val uid = getCurrentUid()
-        decksRef(uid).document(deckId).collection(CARDS_COLLECTION).document(cardId).delete()
-            .await()
+        val now = Timestamp.now()
+        val deckDocument = decksRef(uid).document(deckId)
+        val cardDocument = deckDocument.collection(CARDS_COLLECTION).document(cardId)
+
+        firestore.runTransaction { transaction ->
+            val cardSnapshot = transaction.get(cardDocument)
+            if (cardSnapshot.exists()) {
+                transaction.delete(cardDocument)
+                transaction.update(
+                    deckDocument,
+                    mapOf(
+                        "cardCount" to FieldValue.increment(-1),
+                        "updatedAt" to now,
+                    )
+                )
+            }
+        }.await()
     }
 
     override suspend fun updateFlashCard(
@@ -179,6 +217,18 @@ class FirebaseDeckRepository(
 
     private fun decksRef(uid: String) =
         firestore.collection(USERS_COLLECTION).document(uid).collection(DECKS_COLLECTION)
+
+    private suspend fun backfillCardCountIfMissing(deckDocument: DocumentReference) {
+        runCatching {
+            val cardCount = deckDocument.collection(CARDS_COLLECTION).get().await().size()
+            deckDocument.update(
+                mapOf(
+                    "cardCount" to cardCount,
+                    "updatedAt" to Timestamp.now(),
+                )
+            ).await()
+        }
+    }
 
     private fun getCurrentUid(): String =
         auth.currentUser?.uid ?: error("User must be signed in before accessing decks.")

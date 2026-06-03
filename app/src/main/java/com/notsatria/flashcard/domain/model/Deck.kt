@@ -9,7 +9,5 @@ data class Deck(
     val description: String? = null,
     val color: Color = Color.White,
     val cards: List<FlashCard> = emptyList(),
-) {
-    val cardCount: Int
-        get() = cards.size
-}
+    val cardCount: Int = cards.size,
+)

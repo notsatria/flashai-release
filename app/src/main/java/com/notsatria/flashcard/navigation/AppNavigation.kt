@@ -11,10 +11,11 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.notsatria.flashcard.domain.model.Deck
+import com.notsatria.flashcard.ui.screens.ai_generate.GenerateAIScreen
+import com.notsatria.flashcard.ui.screens.ai_generate.GenerateAIViewModel
 import com.notsatria.flashcard.ui.screens.detail.DeckDetailScreen
-import com.notsatria.flashcard.ui.screens.GenerateAIScreen
 import com.notsatria.flashcard.ui.screens.home.HomeScreen
-import com.notsatria.flashcard.ui.screens.StudyModeScreen
+import com.notsatria.flashcard.ui.screens.study_mode.StudyModeScreen
 import com.notsatria.flashcard.ui.screens.add_deck.AddDeckScreen
 import com.notsatria.flashcard.ui.screens.add_flashcard.AddFlashCardScreen
 import com.notsatria.flashcard.ui.screens.add_flashcard.AddFlashCardViewModel
@@ -22,6 +23,7 @@ import com.notsatria.flashcard.ui.screens.detail.DeckDetailViewModel
 import com.notsatria.flashcard.ui.screens.login.LoginScreen
 import com.notsatria.flashcard.ui.screens.register.RegisterScreen
 import com.notsatria.flashcard.ui.screens.splash.SplashScreen
+import com.notsatria.flashcard.ui.screens.study_mode.StudyModeViewModel
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -116,17 +118,21 @@ fun AppNavigation(
                 )
             }
             entry<AppRoute.StudyMode> { route ->
+                val viewModel: StudyModeViewModel = koinViewModel(
+                    parameters = { parametersOf(route.deckId) }
+                )
                 StudyModeScreen(
-                    deck = Deck(),
-                    deckIndex = 0,
                     onBack = { navigator.navigateBack() },
+                    viewModel = viewModel
                 )
             }
             entry<AppRoute.GenerateAI> { route ->
+                val viewModel: GenerateAIViewModel = koinViewModel(
+                    parameters = { parametersOf(route.deckId) }
+                )
                 GenerateAIScreen(
-                    deck = Deck(),
-                    deckIndex = 0,
                     onBack = { navigator.navigateBack() },
+                    viewModel = viewModel,
                 )
             }
         },

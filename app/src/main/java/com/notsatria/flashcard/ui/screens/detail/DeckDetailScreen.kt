@@ -118,14 +118,15 @@ fun DeckDetailScreenContent(
                     onClick = onGenerateClick,
                     modifier = Modifier.weight(1f),
                 )
-                FlashButton(
-                    text = "+ Tambah",
-                    onClick = onAddFlashCardClick,
-                    modifier = Modifier.weight(1f),
-                    color = uiState.deck.color,
-                )
             }
         },
+        floatingActionButton = {
+            FlashButton(
+                text = "+ Tambah",
+                onClick = onAddFlashCardClick,
+                color = uiState.deck.color,
+            )
+        }
     ) { padding ->
         LazyColumn(
             modifier = Modifier
