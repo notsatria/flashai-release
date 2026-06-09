@@ -4,6 +4,10 @@
     <string name="greetings_desc_login">Ready for today\'s study session?</string>
     <string name="example_email">example@email.com</string>
     <string name="login">Login</string>
+    <string name="or">or</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="google_sign_in_not_configured">Google sign-in is not configured. Add GOOGLE_WEB_CLIENT_ID to local.properties.</string>
+    <string name="google_sign_in_failed">Unable to sign in with Google. Please try again.</string>
     <string name="doesnt_have_account">Don\'t have an account?</string>
     <string name="register_now">Register now</string>
     <string name="greetings_register">Start Learning Now!</string>
