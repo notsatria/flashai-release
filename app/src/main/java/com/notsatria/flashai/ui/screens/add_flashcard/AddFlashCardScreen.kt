@@ -25,9 +25,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.ConfirmationDialog
 import com.notsatria.flashai.ui.components.FlashButton
 import com.notsatria.flashai.ui.components.FlashCardTopBar
@@ -91,7 +93,9 @@ fun AddFlashCardScreenContent(
         modifier,
         topBar = {
             FlashCardTopBar(
-                title = if (uiState.isEditMode) "Edit Flashcard" else "Tambah Flashcard",
+                title = if (uiState.isEditMode) stringResource(R.string.edit_flashcard) else stringResource(
+                    R.string.add_flashcard
+                ),
                 onBack = onBack
             )
         }, snackbarHost = {
@@ -119,13 +123,13 @@ fun AddFlashCardScreenContent(
                         Spacer(Modifier.width(FlashSpacing.md))
                         Column(Modifier.weight(1f)) {
                             Text(
-                                "Siap membuat kartu baru?",
+                                stringResource(R.string.ready_to_add_new_card),
                                 color = FlashColors.Teal200,
                                 style = FlashTypography.bodyLarge,
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                "Buat pertanyaan yang menantang untuk memperkuat ingatanmu.",
+                                stringResource(R.string.create_question_subtitle),
                                 style = FlashTypography.bodySmall
                             )
                         }
@@ -139,23 +143,23 @@ fun AddFlashCardScreenContent(
                     shape = FlashShape.medium
                 ) {
                     Column(Modifier.padding(16.dp)) {
-                        Text("Pertanyaan", style = FlashTypography.bodyLarge)
+                        Text(stringResource(R.string.question), style = FlashTypography.bodyLarge)
                         Spacer(Modifier.height(FlashSpacing.md))
                         FlashTextField(
                             modifier = Modifier,
                             value = uiState.question,
                             onValueChange = onQuestionChange,
-                            placeholder = "Apa ibukota indonesia?",
+                            placeholder = stringResource(R.string.question_example),
                             minLines = 3
                         )
                         Spacer(Modifier.height(FlashSpacing.lg))
-                        Text("Jawaban", style = FlashTypography.bodyLarge)
+                        Text(stringResource(R.string.answer), style = FlashTypography.bodyLarge)
                         Spacer(Modifier.height(FlashSpacing.md))
                         FlashTextField(
                             modifier = Modifier,
                             value = uiState.answer,
                             onValueChange = onAnswerChange,
-                            placeholder = "Ibukota Indonesia adalah Jakarta (saat ini) dan sedang dalam proses transisi ke Nusantara",
+                            placeholder = stringResource(R.string.answer_example),
                             minLines = 4
                         )
                     }
@@ -164,7 +168,9 @@ fun AddFlashCardScreenContent(
             item { Spacer(Modifier.height(FlashSpacing.lg)) }
             item {
                 FlashButton(
-                    text = if (uiState.isEditMode) "Simpan Perubahan" else "Simpan Kartu",
+                    text = if (uiState.isEditMode) stringResource(R.string.save_changes) else stringResource(
+                        R.string.save_card
+                    ),
                     onClick = onSave,
                     modifier = Modifier.fillMaxWidth(),
                     isLoading = uiState.isLoading
@@ -174,7 +180,7 @@ fun AddFlashCardScreenContent(
                 item { Spacer(Modifier.height(FlashSpacing.md)) }
                 item {
                     FlashButton(
-                        text = "Hapus Flashcard",
+                        text = stringResource(R.string.delete_flashcard),
                         onClick = { showDeleteConfirmation = true },
                         modifier = Modifier.fillMaxWidth(),
                         color = FlashColors.DeckPink,
@@ -187,8 +193,8 @@ fun AddFlashCardScreenContent(
 
     if (showDeleteConfirmation) {
         ConfirmationDialog(
-            title = "Hapus flashcard?",
-            message = "Flashcard ini akan dihapus dari deck.",
+            title = stringResource(R.string.delete_flashcard_title),
+            message = stringResource(R.string.delete_flashcard_message),
             onDismiss = { showDeleteConfirmation = false },
             onConfirm = {
                 showDeleteConfirmation = false

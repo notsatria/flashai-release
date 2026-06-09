@@ -9,6 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.FlashButton
 import com.notsatria.flashai.ui.theme.FlashColors
 import com.notsatria.flashai.ui.theme.FlashSpacing
@@ -28,12 +30,12 @@ fun MissingDeckScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Deck tidak ditemukan",
+            text = stringResource(R.string.deck_not_found),
             style = FlashTypography.titleLarge,
             color = FlashColors.Gray900,
         )
         Text(
-            text = "Kembali ke halaman sebelumnya.",
+            text = stringResource(R.string.back_to_previous_page),
             style = FlashTypography.bodyMedium,
             color = FlashColors.Gray400,
         )

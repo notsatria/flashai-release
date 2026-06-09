@@ -33,10 +33,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.ConfirmationDialog
 import com.notsatria.flashai.ui.components.DeckColor
 import com.notsatria.flashai.ui.components.DeckIcon
@@ -105,7 +107,9 @@ fun AddDeckScreenContent(
         modifier,
         topBar = {
             FlashCardTopBar(
-                title = if (uiState.isEditMode) "Edit Deck" else "Buat Deck Baru",
+                title = if (uiState.isEditMode) stringResource(R.string.edit_deck) else stringResource(
+                    R.string.create_new_deck
+                ),
                 onBack = onBack
             )
         },
@@ -125,35 +129,35 @@ fun AddDeckScreenContent(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text("Nama Deck")
+            Text(stringResource(R.string.deck_name))
             Spacer(Modifier.height(8.dp))
             FlashTextField(
                 value = uiState.title,
                 onValueChange = onTitleChange,
-                placeholder = "Contoh: Biologi Dasar"
+                placeholder = stringResource(R.string.deck_name_example)
             )
             Spacer(Modifier.height(16.dp))
             Row {
-                Text("Deskripsi")
+                Text(stringResource(R.string.description))
                 Spacer(Modifier.width(4.dp))
-                Text("(opsional)")
+                Text(stringResource(R.string.optional))
             }
             Spacer(Modifier.height(8.dp))
             FlashTextField(
                 value = uiState.description.orEmpty(),
                 onValueChange = onDescriptionChange,
-                placeholder = "Apa yang akan kamu pelajari di deck ini?",
+                placeholder = stringResource(R.string.description_placeholder),
                 minLines = 3
             )
             Spacer(Modifier.height(8.dp))
-            Text("Pilih Ikon Deck")
+            Text(stringResource(R.string.choose_deck_icon))
             Spacer(Modifier.height(8.dp))
             DeckIconChooser(
                 selectedIconName = uiState.emoji.ifBlank { deckEmojis.first().name },
                 onIconSelected = { onEmojiChange(it.name) },
             )
             Spacer(Modifier.height(16.dp))
-            Text("Warna Tema Deck")
+            Text(stringResource(R.string.deck_theme))
             Spacer(Modifier.height(8.dp))
             DeckColorChooser(
                 selectedColorName = uiState.color.ifBlank { deckColors.first().name },
@@ -161,7 +165,9 @@ fun AddDeckScreenContent(
             )
             Spacer(Modifier.height(FlashSpacing.lg))
             FlashButton(
-                text = if (uiState.isEditMode) "Simpan Perubahan" else "Buat Deck Sekarang",
+                text = if (uiState.isEditMode) stringResource(R.string.save_changes) else stringResource(
+                    R.string.create_deck_now
+                ),
                 onClick = onAddDeck,
                 modifier = Modifier.fillMaxWidth(),
                 isLoading = uiState.isLoading,
@@ -169,7 +175,7 @@ fun AddDeckScreenContent(
             if (uiState.isEditMode) {
                 Spacer(Modifier.height(12.dp))
                 FlashButton(
-                    text = "Hapus Deck",
+                    text = stringResource(R.string.delete_deck),
                     onClick = { showDeleteConfirmation = true },
                     modifier = Modifier.fillMaxWidth(),
                     color = FlashColors.DeckPink,
@@ -181,8 +187,8 @@ fun AddDeckScreenContent(
 
     if (showDeleteConfirmation) {
         ConfirmationDialog(
-            title = "Hapus deck?",
-            message = "Deck dan kartu di dalamnya akan dihapus.",
+            title = stringResource(R.string.delete_deck_question),
+            message = stringResource(R.string.delete_deck_message),
             onDismiss = { showDeleteConfirmation = false },
             onConfirm = {
                 showDeleteConfirmation = false

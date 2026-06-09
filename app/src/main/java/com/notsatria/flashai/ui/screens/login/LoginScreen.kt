@@ -34,10 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.AuthTextField
 import com.notsatria.flashai.ui.components.FlashButton
 import com.notsatria.flashai.ui.theme.FlashColors
@@ -114,12 +116,12 @@ fun LoginScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Selamat Datang Kembali!",
+                stringResource(R.string.greetings_login),
                 style = FlashTypography.titleLarge.copy(fontSize = 32.sp)
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Siap untuk sesi belajar kali ini?",
+                stringResource(R.string.greetings_desc_login),
                 style = FlashTypography.bodyMedium
             )
             Spacer(Modifier.height(32.dp))
@@ -143,7 +145,7 @@ fun LoginScreenContent(
                         label = "Email",
                         value = uiState.email,
                         onValueChange = onEmailChange,
-                        placeholder = "contoh@email.com",
+                        placeholder = stringResource(R.string.example_email),
                         icon = Icons.Outlined.Email
                     )
                     Spacer(Modifier.height(16.dp))
@@ -168,7 +170,7 @@ fun LoginScreenContent(
                     Spacer(Modifier.height(16.dp))
                     FlashButton(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Masuk",
+                        text = stringResource(R.string.login),
                         onClick = onLogin,
                         isLoading = uiState.isLoading,
                     )
@@ -176,10 +178,10 @@ fun LoginScreenContent(
             }
             Spacer(Modifier.height(32.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Belum punya akun?")
+                Text(stringResource(R.string.doesnt_have_account))
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    "Daftar sekarang",
+                    stringResource(R.string.register_now),
                     color = FlashColors.Indigo500,
                     modifier = Modifier.clickable {
                         onNavigateToRegister()

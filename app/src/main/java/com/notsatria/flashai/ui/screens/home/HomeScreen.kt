@@ -28,7 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.domain.model.Deck
 import com.notsatria.flashai.ui.components.ConfirmationDialog
 import com.notsatria.flashai.ui.components.DeckCard
@@ -95,7 +97,9 @@ fun HomeScreenContent(
         }
     ) { padding ->
         if (uiState.decks.isEmpty()) {
-            Column(Modifier.fillMaxSize().padding(padding)) {
+            Column(Modifier
+                .fillMaxSize()
+                .padding(padding)) {
                 HomeHeader(
                     deckCount = uiState.decks.size,
                     onLogoutClick = { showLogoutConfirmation = true },
@@ -110,7 +114,7 @@ fun HomeScreenContent(
                 ) {
                     EmptyState(
                         modifier = Modifier,
-                        text = "Deck masih kosong."
+                        text = stringResource(R.string.deck_empty)
                     )
                 }
             }
@@ -144,8 +148,8 @@ fun HomeScreenContent(
 
     if (showLogoutConfirmation) {
         ConfirmationDialog(
-            title = "Logout?",
-            message = "Kamu akan keluar dari akun ini.",
+            title = stringResource(R.string.logout),
+            message = stringResource(R.string.you_will_signed_out_from_this_acc),
             onDismiss = { showLogoutConfirmation = false },
             onConfirm = {
                 showLogoutConfirmation = false
@@ -169,7 +173,7 @@ private fun HomeHeader(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Halo, Selamat Belajar!👋",
+                text = stringResource(R.string.halo_happy_studying),
                 modifier = Modifier.weight(1f),
                 style = FlashTypography.displayLarge,
                 color = FlashColors.Gray900,
@@ -184,7 +188,7 @@ private fun HomeHeader(
         }
         Spacer(modifier = Modifier.height(FlashSpacing.xs))
         Text(
-            text = "Kamu punya $deckCount deck aktif",
+            text = stringResource(R.string.you_have_deck_args, deckCount),
             style = FlashTypography.bodyMedium,
             color = FlashColors.Gray400,
         )

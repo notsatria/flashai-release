@@ -41,10 +41,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.FlashCardTopBar
 import com.notsatria.flashai.ui.components.LoadingScreen
 import com.notsatria.flashai.ui.screens.MissingDeckScreen
@@ -102,7 +104,7 @@ fun StudyModeScreenContent(
         ) {
             if (currentCard == null) {
                 Text(
-                    text = "Deck ini belum punya kartu.",
+                    text = stringResource(R.string.this_deck_doesnt_have_card),
                     style = FlashTypography.bodyLarge,
                     color = FlashColors.Gray600,
                 )
@@ -134,7 +136,7 @@ fun StudyModeScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(FlashSpacing.md),
             ) {
                 StudyNavButton(
-                    text = "Prev",
+                    text = stringResource(R.string.prev),
                     deckColor = uiState.deck.color,
                     enabled = currentIndex > 0,
                     isPrimary = false,
@@ -142,7 +144,7 @@ fun StudyModeScreenContent(
                     onClick = { currentIndex-- },
                 )
                 StudyNavButton(
-                    text = "Next",
+                    text = stringResource(R.string.next),
                     deckColor = uiState.deck.color,
                     enabled = currentIndex < uiState.deck.cards.lastIndex,
                     isPrimary = true,
@@ -165,7 +167,7 @@ private fun StudyProgress(
             verticalAlignment = Alignment.Bottom,
         ) {
             Text(
-                text = "Progress Belajar",
+                text = stringResource(R.string.study_progress),
                 modifier = Modifier.weight(1f),
                 style = FlashTypography.labelMedium,
                 color = deckColor,
@@ -275,7 +277,7 @@ private fun StudyCardFront(question: String) {
         )
         Spacer(modifier = Modifier.height(52.dp))
         Text(
-            text = "Tap untuk lihat jawaban",
+            text = stringResource(R.string.tap_to_see_answer),
             style = FlashTypography.labelMedium,
             color = Color.White.copy(alpha = 0.72f),
             textAlign = TextAlign.Center,
@@ -294,7 +296,7 @@ private fun StudyCardBack(
         modifier = Modifier.graphicsLayer { rotationY = 180f },
     ) {
         Text(
-            text = "Jawaban",
+            text = stringResource(R.string.answer),
             style = FlashTypography.titleMedium,
             color = deckColor,
         )
@@ -307,7 +309,7 @@ private fun StudyCardBack(
         )
         Spacer(modifier = Modifier.height(FlashSpacing.xl))
         Text(
-            text = "Tap untuk kembali ke pertanyaan",
+            text = stringResource(R.string.tap_to_go_back_question),
             style = FlashTypography.labelMedium,
             color = FlashColors.Gray400,
             textAlign = TextAlign.Center,

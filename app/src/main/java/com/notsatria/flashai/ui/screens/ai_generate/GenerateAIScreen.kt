@@ -25,8 +25,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.AIGenerateButton
 import com.notsatria.flashai.ui.components.CardItem
 import com.notsatria.flashai.ui.components.FlashButton
@@ -93,7 +95,7 @@ fun GenerateAIScreenContent(
         modifier = modifier.fillMaxSize(),
         containerColor = FlashColors.Background,
         topBar = {
-            FlashCardTopBar("Generate dengan AI", onBack = onBack)
+            FlashCardTopBar(stringResource(R.string.generate_with_ai), onBack = onBack)
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
@@ -116,7 +118,7 @@ fun GenerateAIScreenContent(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            text = "Memuat deck...",
+                            text = stringResource(R.string.loading_deck),
                             style = FlashTypography.bodyLarge,
                             color = FlashColors.Gray400,
                         )
@@ -134,7 +136,7 @@ fun GenerateAIScreenContent(
                     )
                     Spacer(modifier = Modifier.height(FlashSpacing.xs))
                     Text(
-                        text = "Masukkan topik, lalu AI akan membuat flashcard untuk deck ini.",
+                        text = stringResource(R.string.insert_topic_ai_will_create_flashcard),
                         style = FlashTypography.bodyMedium,
                         color = FlashColors.Gray400,
                     )
@@ -144,14 +146,14 @@ fun GenerateAIScreenContent(
                 FlashTextField(
                     value = uiState.topic,
                     onValueChange = onTopicChange,
-                    placeholder = "Contoh: sistem pencernaan manusia",
+                    placeholder = stringResource(R.string.topic_example),
                     minLines = 3,
                 )
             }
             item {
                 Column {
                     Text(
-                        "Jumlah kartu:",
+                        stringResource(R.string.card_amount),
                         style = FlashTypography.bodyLarge,
                         color = FlashColors.Gray900
                     )
@@ -188,7 +190,10 @@ fun GenerateAIScreenContent(
             if (uiState.generatedCards.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Hasil (${uiState.generatedCards.size} kartu)",
+                        text = stringResource(
+                            R.string.card_result_amount_args,
+                            uiState.generatedCards.size
+                        ),
                         style = FlashTypography.titleMedium,
                         color = FlashColors.Gray900,
                     )
@@ -198,7 +203,7 @@ fun GenerateAIScreenContent(
                 }
                 item {
                     FlashButton(
-                        text = "Simpan Semua ke Deck",
+                        text = stringResource(R.string.safe_all_to_deck),
                         onClick = onSaveAll,
                         modifier = Modifier.fillMaxWidth(),
                         color = deck?.color ?: FlashColors.Indigo500,

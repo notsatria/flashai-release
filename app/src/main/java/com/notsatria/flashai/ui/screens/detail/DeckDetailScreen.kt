@@ -32,9 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.notsatria.flashai.R
 import com.notsatria.flashai.domain.model.Deck
 import com.notsatria.flashai.ui.components.AIGenerateButton
 import com.notsatria.flashai.ui.components.CardItem
@@ -109,7 +111,7 @@ fun DeckDetailScreenContent(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            FlashCardTopBar("Detail Deck", onBack = onBack, actions = {
+            FlashCardTopBar(stringResource(R.string.deck_detail), onBack = onBack, actions = {
                 IconButton(onClick = { onEditDeckClick(uiState.deck.id) }) {
                     Icon(Icons.Default.Edit, null)
                 }
@@ -132,7 +134,7 @@ fun DeckDetailScreenContent(
         },
         floatingActionButton = {
             FlashButton(
-                text = "+ Tambah",
+                text = stringResource(R.string.add),
                 onClick = onAddFlashCardClick,
                 color = uiState.deck.color,
             )
@@ -153,7 +155,7 @@ fun DeckDetailScreenContent(
             }
             item { Spacer(Modifier.height(FlashSpacing.md)) }
             item {
-                Text("Daftar Kartu", style = FlashTypography.titleMedium)
+                Text(stringResource(R.string.card_lists), style = FlashTypography.titleMedium)
             }
             item {
                 if (uiState.deck.cards.isEmpty()) {
@@ -164,7 +166,7 @@ fun DeckDetailScreenContent(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        EmptyState(text = "Flashcard masih kosong.")
+                        EmptyState(text = stringResource(R.string.flashcard_empty))
                     }
                 }
             }
@@ -211,7 +213,7 @@ private fun DeckHeader(
                     .background(color = Color.White.copy(alpha = 0.3f))
             ) {
                 Text(
-                    text = "${deck.cardCount} kartu",
+                    text = stringResource(R.string.card_count_args, deck.cardCount),
                     style = FlashTypography.bodyMedium,
                     color = Color.White.copy(alpha = 0.78f),
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
@@ -227,7 +229,7 @@ private fun DeckHeader(
                 IconButton(onClick = onStudyClick) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Mulai belajar",
+                        contentDescription = stringResource(R.string.start_learning),
                         tint = Color.White,
                     )
                 }
