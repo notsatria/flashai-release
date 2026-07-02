@@ -40,6 +40,11 @@ android {
             "GROQ_API_KEY",
             (localProperties.getProperty("GROQ_API_KEY") ?: "").asBuildConfigString()
         )
+        buildConfigField(
+            "String",
+            "GOOGLE_WEB_CLIENT_ID",
+            (localProperties.getProperty("GOOGLE_WEB_CLIENT_ID") ?: "").asBuildConfigString()
+        )
     }
 
     buildTypes {
@@ -83,6 +88,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // Startup
     implementation(libs.androidx.startup.runtime)

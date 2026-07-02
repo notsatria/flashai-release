@@ -1,5 +1,6 @@
 package com.notsatria.flashai.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,11 +36,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.notsatria.flashai.BuildConfig
 import com.notsatria.flashai.R
 import com.notsatria.flashai.ui.components.AuthTextField
 import com.notsatria.flashai.ui.components.FlashButton
@@ -59,6 +70,10 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val googleSignInFailedMessage = stringResource(R.string.google_sign_in_failed)
+    val googleSignInNotConfiguredMessage = stringResource(R.string.google_sign_in_not_configured)
 
     LaunchedEffect(Unit) {
         viewModel.showSnackbar.collect { message ->
@@ -82,6 +97,51 @@ fun LoginScreen(
         onLogin = {
             viewModel.login()
         },
+        onGoogleLogin = {
+            if (BuildConfig.GOOGLE_WEB_CLIENT_ID.isBlank()) {
+                viewModel.showMessage(googleSignInNotConfiguredMessage)
+                return@LoginScreenContent
+            }
+
+            coroutineScope.launch {
+                val googleIdOption =
+                    GetSignInWithGoogleOption.Builder(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+                        .build()
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(googleIdOption)
+                    .build()
+
+                try {
+                    val credential = CredentialManager.create(context)
+                        .getCredential(context, request)
+                        .credential
+                    if (
+                        credential is CustomCredential &&
+                        credential.type in GOOGLE_ID_TOKEN_CREDENTIAL_TYPES
+                    ) {
+                        val googleCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                        viewModel.loginWithGoogle(googleCredential.idToken)
+                    } else {
+                        Log.e(
+                            LOGIN_SCREEN_TAG,
+                            "Unexpected credential type: ${credential.type}",
+                        )
+                        viewModel.showMessage(googleSignInFailedMessage)
+                    }
+                } catch (e: GetCredentialCancellationException) {
+                    Log.d(LOGIN_SCREEN_TAG, "Google sign-in cancelled", e)
+                } catch (e: GetCredentialException) {
+                    Log.e(LOGIN_SCREEN_TAG, "Credential Manager error", e)
+                    viewModel.showMessage(googleSignInFailedMessage)
+                } catch (e: IllegalArgumentException) {
+                    Log.e(LOGIN_SCREEN_TAG, "Unable to parse Google credential", e)
+                    viewModel.showMessage(googleSignInFailedMessage)
+                } catch (e: Exception) {
+                    Log.e(LOGIN_SCREEN_TAG, "Unexpected Google sign-in error", e)
+                    viewModel.showMessage(googleSignInFailedMessage)
+                }
+            }
+        },
         snackbarHostState = snackbarHostState,
     )
 }
@@ -94,6 +154,7 @@ fun LoginScreenContent(
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onLogin: () -> Unit = {},
+    onGoogleLogin: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollState = rememberScrollState()
@@ -174,6 +235,41 @@ fun LoginScreenContent(
                         onClick = onLogin,
                         isLoading = uiState.isLoading,
                     )
+                    Spacer(Modifier.height(20.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(R.string.or),
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            style = FlashTypography.bodyMedium,
+                            color = FlashColors.Gray600,
+                        )
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                    }
+                    Spacer(Modifier.height(20.dp))
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = !uiState.isLoading, onClick = onGoogleLogin),
+                        border = BorderStroke(color = FlashColors.Gray200, width = 1.dp),
+                        shape = RoundedCornerShape(50.dp),
+                        color = FlashColors.Surface,
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.continue_with_google),
+                                style = FlashTypography.labelLarge,
+                                color = FlashColors.Gray900,
+                            )
+                        }
+                    }
                 }
             }
             Spacer(Modifier.height(32.dp))
@@ -192,6 +288,12 @@ fun LoginScreenContent(
 }
 
 private const val KEYBOARD_SCROLL_DELAY_MS = 250L
+private const val LOGIN_SCREEN_TAG = "LoginScreen"
+
+private val GOOGLE_ID_TOKEN_CREDENTIAL_TYPES = setOf(
+    GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL,
+    GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL,
+)
 
 @Preview
 @Composable

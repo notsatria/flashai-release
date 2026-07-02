@@ -63,6 +63,32 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    fun loginWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            runCatching {
+                authRepository.signInWithGoogle(idToken)
+            }.onSuccess {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isLoginSuccess = true,
+                    )
+                }
+            }.onFailure { throwable ->
+                Log.e(TAG, "Error on Google login: ${throwable.message}", throwable)
+                _uiState.update { it.copy(isLoading = false) }
+                _showSnackbar.send(throwable.message ?: "Gagal masuk dengan Google. Coba lagi.")
+            }
+        }
+    }
+
+    fun showMessage(message: String) {
+        viewModelScope.launch {
+            _showSnackbar.send(message)
+        }
+    }
+
     private companion object {
         const val TAG = "LoginViewModel"
     }

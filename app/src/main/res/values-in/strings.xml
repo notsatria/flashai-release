@@ -5,6 +5,10 @@
     <string name="greetings_desc_login">Siap untuk sesi belajar kali ini?</string>
     <string name="example_email">contoh@email.com</string>
     <string name="login">Masuk</string>
+    <string name="or">atau</string>
+    <string name="continue_with_google">Lanjutkan dengan Google</string>
+    <string name="google_sign_in_not_configured">Google sign-in belum dikonfigurasi. Tambahkan GOOGLE_WEB_CLIENT_ID ke local.properties.</string>
+    <string name="google_sign_in_failed">Gagal masuk dengan Google. Silakan coba lagi.</string>
     <string name="doesnt_have_account">Belum punya akun?</string>
     <string name="register_now">Daftar sekarang</string>
     <string name="greetings_register">Mulai Belajar Sekarang!</string>

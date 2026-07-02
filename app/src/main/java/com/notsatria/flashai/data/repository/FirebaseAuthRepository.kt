@@ -2,6 +2,7 @@ package com.notsatria.flashai.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.notsatria.flashai.domain.repository.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,11 @@ class FirebaseAuthRepository(
 
     override suspend fun signIn(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email.trim(), password).await()
+    }
+
+    override suspend fun signInWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        firebaseAuth.signInWithCredential(credential).await()
     }
 
     override suspend fun signUp(email: String, password: String) {
